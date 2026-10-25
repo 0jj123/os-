@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OS 期中衝刺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e13; --panel:#12161f; --card:#181d29; --card2:#1e2433; --line:#2a3245;
+  --text:#e7e9ef; --muted:#97a0b3; --dim:#6b7488;
+  --accent:#ff5a36; --accent2:#ff8a5c; --accent-bg:rgba(255,90,54,.10);
+  --ok:#3ecf8e; --ok-bg:rgba(62,207,142,.10);
+  --bad:#ff4d6d; --bad-bg:rgba(255,77,109,.10);
+  --info:#5aa9ff; --info-bg:rgba(90,169,255,.09);
+  --warn:#ffc857; --warn-bg:rgba(255,200,87,.09);
+  --purple:#b18cff; --purple-bg:rgba(177,140,255,.09);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --nav-w:270px; --top-h:60px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent2)}
+code,.t{font-family:var(--mono)}
+.t{color:var(--accent2);background:var(--accent-bg);padding:1px 6px;border-radius:5px;font-size:.88em;white-space:nowrap}
+.zh{color:var(--muted);font-size:.9em}
+
+/* ---------- Top bar ---------- */
+.topbar{position:fixed;inset:0 0 auto 0;height:var(--top-h);z-index:50;display:flex;align-items:center;gap:14px;padding:0 18px;background:rgba(12,14,19,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--mono);font-weight:700;font-size:15px;white-space:nowrap;color:var(--text)}
+.brand b{color:var(--accent)}
+.tabs{display:flex;gap:6px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font:inherit;font-size:14px;font-weight:500;color:var(--muted);background:transparent;border:1px solid transparent;padding:7px 14px;border-radius:9px;cursor:pointer;white-space:nowrap;transition:.2s}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--accent);border-color:var(--accent);box-shadow:0 4px 18px rgba(255,90,54,.35)}
+.menu-btn{display:none;font-size:20px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;width:38px;height:38px;cursor:pointer;flex-shrink:0}
+
+/* ---------- Sidebar ---------- */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--nav-w);background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:18px 12px 40px;z-index:40;transition:transform .25s}
+.sidebar h4{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);margin:4px 10px 10px;text-transform:uppercase}
+.nav a{display:block;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:7px;border-left:2px solid transparent;transition:.15s;line-height:1.45}
+.nav a:hover{color:var(--text);background:var(--card)}
+.nav a.l2{font-weight:700;color:var(--text);margin-top:10px;font-size:14.5px}
+.nav a.l3{padding-left:22px;font-size:13.5px}
+.nav a.active{color:var(--accent2);background:var(--accent-bg);border-left-color:var(--accent)}
+.overlay{display:none;position:fixed;inset:var(--top-h) 0 0 0;background:rgba(0,0,0,.55);z-index:35}
+
+/* ---------- Main ---------- */
+main{margin-left:var(--nav-w);padding:calc(var(--top-h) + 28px) 40px 120px;max-width:calc(1060px + var(--nav-w))}
+.panel{display:none}
+.panel.active{display:block;animation:fade .3s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(135deg,rgba(255,90,54,.18),rgba(255,90,54,.02) 60%),var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin-bottom:34px}
+.hero h1{margin:0 0 6px;font-size:26px;font-weight:900}
+.hero p{margin:0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-family:var(--mono);font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--bg)}
+.chip.fire{color:var(--accent2);border-color:rgba(255,90,54,.4)}
+
+h2.unit{font-size:24px;font-weight:900;margin:56px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--line);scroll-margin-top:calc(var(--top-h) + 16px);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h2.unit .num{font-family:var(--mono);font-size:13px;color:#fff;background:var(--accent);padding:3px 10px;border-radius:7px}
+h3.sec{font-size:19px;margin:40px 0 14px;scroll-margin-top:calc(var(--top-h) + 16px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h3.sec::before{content:"";width:4px;height:20px;background:var(--accent);border-radius:2px}
+h4.sub{font-size:16px;margin:26px 0 10px;color:var(--text)}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.exam{font-family:var(--mono);font-size:11.5px;font-weight:600;color:#fff;background:linear-gradient(90deg,#ff5a36,#ff2d55);padding:2px 9px;border-radius:99px;letter-spacing:.02em;white-space:nowrap}
+
+/* ---------- Boxes ---------- */
+.box{position:relative;border-radius:12px;padding:16px 18px 14px;margin:16px 0;border:1px solid var(--line);background:var(--card);transition:transform .2s,box-shadow .2s,border-color .2s}
+.box:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.box>.lbl{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.06em;margin-bottom:6px}
+.box p:first-of-type{margin-top:2px}
+.box p:last-child,.box ul:last-child{margin-bottom:0}
+.def{border-left:4px solid var(--accent);background:linear-gradient(90deg,var(--accent-bg),transparent 70%),var(--card)}
+.def>.lbl{color:var(--accent2)}
+.hl{border:1px solid rgba(255,200,87,.35);background:var(--warn-bg)}
+.hl>.lbl{color:var(--warn)}
+.rel{border-left:4px solid var(--info);background:linear-gradient(90deg,var(--info-bg),transparent 70%),var(--card)}
+.rel>.lbl{color:var(--info)}
+.ex{border-left:4px solid var(--ok);background:linear-gradient(90deg,var(--ok-bg),transparent 70%),var(--card)}
+.ex>.lbl{color:var(--ok)}
+.pit{border-left:4px solid var(--bad);background:linear-gradient(90deg,var(--bad-bg),transparent 70%),var(--card)}
+.pit>.lbl{color:var(--bad)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid2 .box{margin:0}
+
+/* ---------- Tables ---------- */
+.tbl{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:12px;transition:transform .2s,box-shadow .2s}
+.tbl:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--card2);font-weight:700;color:var(--accent2);font-size:13.5px;white-space:nowrap}
+td{background:var(--card)}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:600}
+.good{color:var(--ok)} .badc{color:var(--bad)}
+
+/* ---------- Flow steps ---------- */
+.flow{list-style:none;counter-reset:s;padding:4px 0 0;margin:16px 0}
+.flow li{counter-increment:s;position:relative;padding:12px 16px 12px 62px;margin:0 0 14px;background:var(--card);border:1px solid var(--line);border-radius:11px;transition:transform .2s,border-color .2s}
+.flow li:hover{transform:translateX(4px);border-color:rgba(255,90,54,.5)}
+.flow li::before{content:counter(s);position:absolute;left:14px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--mono);font-weight:700;font-size:14px;display:grid;place-items:center;box-shadow:0 0 0 4px var(--bg)}
+.flow li:not(:last-child)::after{content:"";position:absolute;left:29px;top:calc(50% + 18px);height:calc(50% + 6px);width:2px;background:linear-gradient(var(--accent),transparent)}
+.flow li b.s{display:block;font-size:15px}
+.flow li span.d{color:var(--muted);font-size:14px}
+.flow-title{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin:20px 0 -4px;letter-spacing:.05em}
+
+/* ---------- Diagrams ---------- */
+.diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0;overflow-x:auto;transition:transform .2s}
+.diagram:hover{transform:translateY(-2px)}
+.diagram svg{display:block;width:100%;min-width:520px;max-width:720px;margin:0 auto;height:auto}
+.dcap{text-align:center;font-size:13px;color:var(--dim);margin-top:8px}
+svg text{font-family:var(--mono);fill:var(--text)}
+.mem{display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:6px 16px;max-width:620px;margin:0 auto;align-items:stretch}
+.mem .seg{border:1px solid var(--line);padding:9px;text-align:center;font-family:var(--mono);font-weight:700;border-radius:6px}
+.mem .note{font-size:13.5px;color:var(--muted);align-self:center}
+.seg.stack{background:rgba(255,90,54,.18)} .seg.free{background:transparent;border-style:dashed;color:var(--dim);font-weight:400}
+.seg.heap{background:rgba(255,200,87,.15)} .seg.data{background:rgba(90,169,255,.15)} .seg.text{background:rgba(62,207,142,.15)}
+.arch{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:13px}
+.arch .row{display:flex;gap:6px;align-items:stretch}
+.arch .tag{width:92px;flex-shrink:0;font-size:11.5px;color:var(--dim);display:grid;place-items:center;text-align:center}
+.arch .cell{flex:1;padding:8px;text-align:center;border-radius:6px;border:1px solid var(--line)}
+.arch .u{background:rgba(90,169,255,.13)} .arch .k{background:rgba(255,90,54,.16)} .arch .h{background:var(--card2);color:var(--muted)}
+.arch .msg{text-align:center;color:var(--warn);font-size:12px}
+.code{font-family:var(--mono);font-size:13.5px;background:#0a0c10;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;line-height:1.6;white-space:pre;color:#cfd5e2;margin:14px 0}
+.code .c{color:var(--dim)} .code .k{color:var(--accent2)} .code .o{color:var(--ok)}
+
+/* ---------- Flashcards ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 20px}
+.btn{font:inherit;font-size:14px;padding:8px 15px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.on{background:var(--accent-bg);border-color:var(--accent);color:var(--accent2)}
+.counter{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.fc-group{font-size:18px;margin:34px 0 14px;scroll-margin-top:calc(var(--top-h) + 16px)}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.fc{perspective:1200px;cursor:pointer;transition:transform .2s}
+.fc:hover{transform:translateY(-4px)}
+.fc-inner{display:grid;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,.7,.3,1);min-height:230px}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;border:1px solid var(--line);padding:18px;display:flex;flex-direction:column}
+.front{background:linear-gradient(160deg,var(--card2),var(--card));justify-content:center;text-align:center}
+.front .k{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.1em;margin-bottom:10px}
+.front .term{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--accent2);line-height:1.4}
+.front .scn{font-size:15px;line-height:1.6;color:var(--text)}
+.front .hint{font-size:12px;color:var(--dim);margin-top:14px}
+.back{background:linear-gradient(160deg,#241a18,var(--card));border-color:rgba(255,90,54,.45);transform:rotateY(180deg);font-size:14px;line-height:1.65}
+.back .bt{font-weight:700;color:var(--accent2);margin-bottom:6px;font-size:14.5px}
+.back .bx{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);color:var(--ok);font-size:13.5px}
+
+/* ---------- Quiz ---------- */
+.scorebar{position:sticky;top:calc(var(--top-h) + 8px);z-index:20;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:rgba(18,22,31,.95);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:22px;font-family:var(--mono);font-size:13.5px}
+.scorebar .s b{color:var(--accent2);font-size:16px}
+.prog{flex:1;min-width:120px;height:6px;background:var(--line);border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--warn));transition:width .3s}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;margin:0 0 20px;scroll-margin-top:calc(var(--top-h) + 70px);transition:transform .2s,box-shadow .2s}
+.q:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.q .qh{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.q .qn{font-family:var(--mono);font-weight:700;color:#fff;background:var(--accent);border-radius:7px;padding:1px 9px;font-size:13px}
+.q .qt{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:1px 9px}
+.q .stem{font-size:15.5px;margin:6px 0 14px}
+.opt{display:flex;gap:10px;width:100%;text-align:left;font:inherit;font-size:14.5px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:8px 0;cursor:pointer;transition:.15s;line-height:1.55}
+.opt .ol{font-family:var(--mono);font-weight:700;color:var(--accent2);flex-shrink:0}
+.opt:hover:not(:disabled){border-color:var(--accent);transform:translateX(3px)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .ol{color:var(--ok)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .ol{color:var(--bad)}
+.opt.dim{opacity:.55}
+.expl{display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;font-size:14.5px}
+.expl.show{display:block;animation:fade .3s}
+.expl .verdict{font-weight:700;margin-bottom:6px}
+.expl ul{list-style:none;padding:0;margin:8px 0 0}
+.expl li{padding:6px 10px;border-radius:7px;margin:5px 0;background:var(--bg)}
+.expl li.r{border-left:3px solid var(--ok)} .expl li.w{border-left:3px solid var(--bad)}
+
+/* ---------- Exam tab ---------- */
+.paper{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;margin:18px 0}
+.eq{border-bottom:1px solid var(--line);padding:16px 0}
+.eq:last-child{border-bottom:none}
+.eq .qq{font-weight:700;margin-bottom:8px}
+.eq .qq .pts{font-family:var(--mono);color:var(--dim);font-weight:400;font-size:13px}
+details.ans{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:0 14px;margin-top:8px}
+details.ans summary{cursor:pointer;padding:10px 0;color:var(--accent2);font-weight:600;font-size:14px;list-style:none}
+details.ans summary::before{content:"▶ ";font-size:11px}
+details.ans[open] summary::before{content:"▼ "}
+details.ans[open]{padding-bottom:12px}
+.goto{font-family:var(--mono);font-size:12px;color:var(--info);background:var(--info-bg);border:1px solid rgba(90,169,255,.3);border-radius:99px;padding:1px 9px;cursor:pointer;text-decoration:none;white-space:nowrap;display:inline-block;margin:2px 2px}
+.goto:hover{background:rgba(90,169,255,.2)}
+.blanks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:12px 0}
+.blank{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;transition:transform .2s}
+.blank:hover{transform:translateY(-2px)}
+.blank .a{font-family:var(--mono);color:var(--ok);font-weight:700;filter:blur(5px);cursor:pointer;transition:filter .2s;user-select:none}
+.blank .a.show{filter:none}
+.small{font-size:13.5px;color:var(--muted)}
+
+/* ---------- RWD ---------- */
+@media (max-width:900px){
+  .menu-btn{display:block}
+  .sidebar{transform:translateX(-100%);width:min(300px,82vw)}
+  body.nav-open .sidebar{transform:none;box-shadow:10px 0 40px rgba(0,0,0,.5)}
+  body.nav-open .overlay{display:block}
+  main{margin-left:0;padding:calc(var(--top-h) + 18px) 16px 100px}
+  .grid2{grid-template-columns:1fr}
+  .brand span{display:none}
+  .tab{padding:7px 10px;font-size:13.5px}
+  h2.unit{font-size:21px}
+  .hero{padding:20px}
+  .hero h1{font-size:22px}
+  .mem{grid-template-columns:130px 1fr}
+}
+@media (max-width:520px){
+  .topbar{gap:8px;padding:0 10px}
+  .brand{display:none}
+  .tabs{margin-left:0}
+  .fc-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="開啟導覽">☰</button>
+  <div class="brand"><b>$</b> os_midterm<span> --ch1~5.2</span></div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="notes">📘 詳細筆記</button>
+    <button class="tab" data-tab="cards">🃏 Flashcard</button>
+    <button class="tab" data-tab="quiz">✅ 小測驗</button>
+    <button class="tab" data-tab="exam">🔥 考古題解析</button>
+  </nav>
+</header>
+<aside class="sidebar" id="sidebar"><h4 id="navTitle">目錄</h4><div class="nav" id="nav"></div></aside>
+<div class="overlay" id="overlay"></div>
+
+<main>
+<!-- =========================================================
+     TAB 1 : NOTES
+     ========================================================= -->
+<section class="panel active" id="tab-notes">
+  <div class="hero">
+    <h1>作業系統 期中衝刺筆記</h1>
+    <p>Operating System Concepts 10th ed. · 範圍 Ch1 ～ Ch5.2 · 標 <span class="exam">🔥 考古</span> 的是歷屆期中考出現過的觀念</p>
+    <div class="chips">
+      <span class="chip fire">dual-mode ×3 年</span><span class="chip fire">microkernel / LKM ×3 年</span><span class="chip fire">IPC + producer-consumer ×3 年</span><span class="chip fire">one-to-one model ×3 年</span><span class="chip fire">fork() + pthread 輸出題</span><span class="chip fire">bootstrap / clustered 填空</span>
+    </div>
+  </div>
+
+  <!-- ================= CH1 ================= -->
+  <h2 class="unit" id="ch1" data-nav="Ch1 Introduction"><span class="num">CH 1</span>Introduction 導論</h2>
+
+  <h3 class="sec" id="ch1-os" data-nav="1.1 OS 是什麼">1.1 OS 是什麼</h3>
+  <div class="box def"><span class="lbl">📌 定義 DEFINITION</span>
+    <p><span class="t">Operating System</span> <span class="zh">作業系統</span>：介於使用者與硬體之間的程式，提供讓程式方便且有效率執行的環境。</p>
+    <ul>
+      <li><span class="t">resource allocator</span> <span class="zh">資源分配者</span>：管理 CPU、記憶體、I/O，處理資源爭用。</li>
+      <li><span class="t">control program</span> <span class="zh">控制程式</span>：控制使用者程式的執行，避免錯誤或不當使用。</li>
+      <li><span class="t">kernel</span> <span class="zh">核心</span>：「一直在電腦上執行的那個程式」，其餘是 <span class="t">system program</span> 或 <span class="t">application program</span>。</li>
+    </ul>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子 EXAMPLE</span>
+    <p>你在 Mac 上同時開 Safari 和 Spotify：OS 決定誰先用 CPU（resource allocator），並阻止 Safari 去改寫 Spotify 的記憶體（control program）。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-when" data-nav="1.2 OS 何時執行">1.2 OS 什麼時候會執行？（老師必講）</h3>
+  <p>OS 平常是「睡著」的，只有在下列事件發生時才會拿到 CPU。這張表把 Ch1～Ch4 串起來：</p>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>時機</th><th>觸發來源</th><th>例子</th></tr>
+    <tr><td>(1)</td><td><span class="t">system booting</span> 開機</td><td>bootstrap program</td><td>按下電源，ROM 中的程式把 kernel 載入 RAM</td></tr>
+    <tr><td>(2)</td><td><span class="t">interrupt</span> 中斷</td><td>硬體（H/W）</td><td>鍵盤按鍵、磁碟讀完、timer 時間到</td></tr>
+    <tr><td>(3)</td><td><span class="t">exception</span> 例外（trap）</td><td>軟體錯誤</td><td><code>a = 5/0;</code>、存取 NULL 指標</td></tr>
+    <tr><td>(4)</td><td><span class="t">system call</span> 系統呼叫</td><td>軟體主動請求</td><td><code>fork()</code>、<code>read()</code>、<code>printf()</code> 底層的 <code>write()</code></td></tr>
+    <tr><td>(5)</td><td><span class="t">kernel thread</span></td><td>OS 自己的執行緒</td><td>Linux 開機時建立的 thread 負責管理裝置、記憶體</td></tr>
+  </table></div>
+  <div class="box hl"><span class="lbl">⚡ 重要觀念</span>
+    <p>Modern OS 是 <span class="t">interrupt-driven</span> <span class="zh">中斷驅動</span>：沒有事件時 OS 什麼都不做；事件幾乎都透過 <b>interrupt 或 trap</b> 通知 OS。</p>
+  </div>
+
+  <h4 class="sub">開機流程 Bootstrap <span class="exam">🔥 考古 2017、2019 填空</span></h4>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">bootstrap program</span> <span class="zh">開機程式</span>：存在 ROM / EEPROM / flash 中的第一個程式，<b>initializes all aspects of the system, loads OS kernel, starts executing the OS</b>（這句就是考古填空題的原文）。</p>
+  </div>
+  <div class="flow-title">// 開機流程</div>
+  <ol class="flow">
+    <li><b class="s">電源開啟，CPU 執行 ROM 中的 bootstrap program</b><span class="d">RAM 斷電後是空的，只有 ROM 的內容還在</span></li>
+    <li><b class="s">初始化系統</b><span class="d">檢查並初始化 CPU 暫存器、記憶體、裝置控制器</span></li>
+    <li><b class="s">載入 kernel image 到 RAM</b><span class="d">找到 OS kernel，複製到主記憶體</span></li>
+    <li><b class="s">開始執行 OS，啟動第一個 process</b><span class="d">例如 UNIX 的 <code>init</code> / Linux 的 <code>systemd</code></span></li>
+    <li><b class="s">等待事件（interrupt）</b><span class="d">之後 OS 只在 interrupt / trap 發生時才執行</span></li>
+  </ol>
+
+  <h4 class="sub">中斷處理流程 Interrupt Handling</h4>
+  <ol class="flow">
+    <li><b class="s">裝置送出 interrupt 訊號給 CPU</b><span class="d">例如磁碟控制器完成讀取</span></li>
+    <li><b class="s">CPU 保存被中斷指令的位址與狀態</b><span class="d">這樣處理完才能回來繼續執行</span></li>
+    <li><b class="s">查 <span class="t">interrupt vector</span> <span class="zh">中斷向量表</span></b><span class="d">表中存著各種中斷對應的服務程式位址</span></li>
+    <li><b class="s">跳到 <span class="t">ISR</span>（interrupt service routine，中斷服務程式）執行</b><span class="d">此時處於 kernel mode</span></li>
+    <li><b class="s">還原狀態，回到原程式繼續執行</b></li>
+  </ol>
+  <div class="box rel"><span class="lbl">🔗 關聯 DMA</span>
+    <p><span class="t">DMA</span>（Direct Memory Access，直接記憶體存取）：大量資料傳輸時，裝置控制器直接把整塊資料搬進記憶體，<b>一整塊才發一次 interrupt</b>，而不是每個 byte 都中斷 CPU。例：從 SSD 讀 1 GB 影片檔。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-trap" data-nav="Interrupt / Trap / System call">Interrupt vs Trap vs System Call <span class="exam">🔥 考古 2019 (15%)</span></h3>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th><span class="t">interrupt</span> 中斷</th><th><span class="t">trap / exception</span> 例外</th><th><span class="t">system call</span> 系統呼叫</th></tr>
+    <tr><td>產生者</td><td>硬體（H/W）</td><td>軟體（執行中的程式）</td><td>軟體（使用者程式主動）</td></tr>
+    <tr><td>是否刻意</td><td>非同步，和目前指令無關</td><td>非刻意，因錯誤造成</td><td>刻意請求 OS 服務</td></tr>
+    <tr><td>本質</td><td>H/W interrupt</td><td>S/W-generated interrupt</td><td>一種 trap（被硬體當成 S/W interrupt）</td></tr>
+    <tr><td>例子</td><td>鍵盤輸入、I/O 完成、timer 到期</td><td>除以零、非法記憶體存取</td><td><code>fork()</code>、<code>open()</code>、<code>read()</code></td></tr>
+    <tr><td>OS 處理後</td><td>回原程式繼續</td><td>通常終止程式（或處理後繼續）</td><td>回傳結果給程式繼續</td></tr>
+  </table></div>
+  <div class="box rel"><span class="lbl">🔗 關聯與差異</span>
+    <p><b>trap 是大分類，system call 是「刻意的 trap」</b>；exception（如 5/0）是「意外的 trap」。三者共同點：<b>都會讓 CPU 從 user mode 切換到 kernel mode</b>，交給 OS 處理。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-dual" data-nav="1.4 Dual-mode & Timer">1.4 Dual-Mode Operation 與 Timer <span class="exam">🔥 考古 每年必考</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">dual-mode operation</span> <span class="zh">雙模式運作</span>：硬體加上一個 <span class="t">mode bit</span>，區分目前執行的是 OS 還是使用者程式。</p>
+    <ul>
+      <li><span class="t">kernel mode</span>（mode bit = <b>0</b>）：又稱 supervisor / system / privileged mode，執行 OS 程式碼。</li>
+      <li><span class="t">user mode</span>（mode bit = <b>1</b>）：執行使用者程式。</li>
+    </ul>
+    <p><span class="t">privileged instruction</span> <span class="zh">特權指令</span>：可能造成危害、只能在 kernel mode 執行的指令（切換到 kernel mode、I/O 控制、timer 管理、中斷管理）。在 user mode 執行會被硬體 trap 給 OS。</p>
+  </div>
+  <div class="flow-title">// system call 的 mode 切換（考試畫圖題）</div>
+  <ol class="flow">
+    <li><b class="s">user process 執行中（user mode，mode bit = 1）</b></li>
+    <li><b class="s">呼叫 system call → 產生 trap</b><span class="d">硬體把 mode bit 設成 0，切到 kernel mode</span></li>
+    <li><b class="s">OS 查 system call table，執行對應的服務程式</b><span class="d">在 kernel mode 下可以使用 privileged instruction</span></li>
+    <li><b class="s">return from system call</b><span class="d">mode bit 設回 1，回到 user mode，程式繼續執行</span></li>
+  </ol>
+  <div class="box def"><span class="lbl">📌 定義 Timer</span>
+    <p><span class="t">timer</span> <span class="zh">計時器</span>：在指定時間後對 CPU 發出 interrupt，確保 OS 能拿回 CPU 控制權。OS 在把 CPU 交給程式前先設定 counter，每個 clock tick 遞減，<b>歸零就產生 interrupt</b>。設定 timer 是 privileged instruction。</p>
+  </div>
+  <div class="box hl"><span class="lbl">⚡ 申論模板：為什麼需要硬體支援的 dual-mode？（用 trap、system call、timer 回答）</span>
+    <ul>
+      <li><b>目的</b>：保護 OS 不被出錯的使用者破壞，也保護使用者彼此不互相破壞（protecting the OS from errant users, and errant users from one another）。</li>
+      <li><b>trap</b>：程式做出非法動作（5/0、亂寫別人的記憶體、在 user mode 執行 privileged instruction）→ 硬體 trap 到 kernel mode，由 OS 處理（通常終止程式），錯誤不會擴散到 OS 和其他程式。</li>
+      <li><b>system call</b>：使用者程式不能直接做 I/O 這類特權動作，只能透過 system call「請」OS 代做，OS 在 kernel mode 先檢查請求是否合法再執行 → 存取受控管。</li>
+      <li><b>timer interrupt</b>：程式陷入 <code>while(1){}</code> 也不會霸佔 CPU；時間到 timer 中斷讓 OS 拿回控制權。而「修改 timer」是 privileged instruction，使用者程式無法關掉它。</li>
+      <li><b>結論</b>：只有 mode bit 由硬體維護，軟體才無法自行提權；若沒有硬體支援，任何程式都能執行特權指令，保護機制就形同虛設。</li>
+    </ul>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>老師投影片的 4 個 Program Misbehavior：<code>a=5/0</code>（除零 exception）、<code>b=(char*)0; b[10]='A'</code>（寫入 NULL 附近，記憶體違規）、<code>malloc(10)</code> 卻寫 <code>b[10000]</code>（越界，可能 segmentation fault）、<code>while(1){}</code>（無窮迴圈 → 靠 <b>timer</b> 解決，不會產生 exception）。</p>
+  </div>
+  <div class="box rel"><span class="lbl">🔗 延伸 Multimode</span>
+    <p>現代 CPU 不只兩種模式：Intel 64 有 4 個 <span class="t">protection rings</span>；支援虛擬化的 CPU 另有 <span class="t">VMM mode</span>，給 virtual machine manager 使用，權限介於 user 與 kernel 之間。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-multi" data-nav="Multiprogramming / Time-sharing">Multiprogramming vs Multitasking <span class="exam">🔥 考古 填空＋畫圖</span></h3>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th><span class="t">single tasking</span></th><th><span class="t">multiprogramming</span> 多元程式</th><th><span class="t">multitasking / time-sharing</span> 分時</th></tr>
+    <tr><td>記憶體中的程式數</td><td>1 個</td><td>多個 process 同時在記憶體</td><td>多個</td></tr>
+    <tr><td>何時切換</td><td>不切換，跑完才換</td><td><b>目前 process 需要等待（如 I/O）時</b>才切換</td><td><b>time slice 用完</b>就切換，切換非常頻繁</td></tr>
+    <tr><td>目標</td><td>—</td><td>提高 <b>CPU utilization</b></td><td>縮短 <b>response time</b>，讓使用者能互動</td></tr>
+    <tr><td>需要的 OS 功能</td><td>—</td><td>memory management、CPU scheduling、concurrency control</td><td>再加上 virtual memory、file system、protection、synchronization、deadlock 處理</td></tr>
+  </table></div>
+  <div class="box rel"><span class="lbl">🔗 關聯</span>
+    <p><b>Multitasking 是 multiprogramming 的邏輯延伸</b>：multiprogramming 只在「等待」時切換；time-sharing 則把時間切成 <span class="t">time slice</span>，強制輪流，快速切換製造「多個程式同時執行」的錯覺。</p>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>multiprogramming：程式 A 讀磁碟時，CPU 改跑程式 B（不讓 CPU 閒著）。time-sharing：你一邊打字一邊聽音樂，每個程式每次只跑幾毫秒就換下一個，感覺所有程式都在跑。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-arch" data-nav="1.3 系統架構 SMP/NUMA/Cluster">1.3 Computer-System Architecture <span class="exam">🔥 考古 填空</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">multiprocessor system</span>：兩顆以上處理器，共用 bus、有時共用 clock、memory、周邊。主要優點是 <b>increased throughput</b>。</p>
+    <p><span class="t">clustered system</span> <span class="zh">叢集系統</span>：<b>composed of two or more individual systems or nodes joined together</b>（考古原句），通常用來提供 <b>high availability</b>（高可用性）或 high-performance computing。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>術語</th><th>中文</th><th>重點</th><th>例子</th></tr>
+    <tr><td><span class="t">SMP</span> symmetric multiprocessing</td><td>對稱多處理</td><td>所有處理器地位平等（peers），<b>沒有 boss-worker 關係</b>，每顆都能執行所有工作含 OS 功能</td><td>Windows、macOS、Linux 都支援</td></tr>
+    <tr><td><span class="t">asymmetric multiprocessing</span></td><td>非對稱多處理</td><td>每顆處理器負責特定工作，有 boss processor 分派工作給 worker</td><td>早期大型主機</td></tr>
+    <tr><td><span class="t">multicore</span></td><td>多核心</td><td>多個 core 在同一晶片，較省電、晶片內通訊較快，OS 看成 N 顆處理器</td><td>M2 晶片 8 核心</td></tr>
+    <tr><td><span class="t">UMA</span></td><td>均勻記憶體存取</td><td>任一 CPU 存取任一 RAM 時間相同</td><td>一般小型 SMP</td></tr>
+    <tr><td><span class="t">NUMA</span></td><td>非均勻記憶體存取</td><td>CPU 存取「自己附近」的記憶體較快，存取遠端較慢</td><td>多插槽伺服器</td></tr>
+    <tr><td><span class="t">asymmetric clustering</span></td><td>非對稱叢集</td><td>一台跑應用，另一台 <b>hot standby</b> 只監控，主機掛了才接手</td><td>銀行備援主機</td></tr>
+    <tr><td><span class="t">symmetric clustering</span></td><td>對稱叢集</td><td>多台都在跑應用，同時互相監控</td><td>web server cluster</td></tr>
+  </table></div>
+  <div class="box def"><span class="lbl">📌 相關名詞</span>
+    <ul>
+      <li><span class="t">graceful degradation</span> <span class="zh">優雅降級</span>：服務能力隨存活硬體的比例下降，而不是整個停擺。</li>
+      <li><span class="t">fault-tolerant system</span> <span class="zh">容錯系統</span>：<b>can suffer a failure of any single component and still continue operation</b>（2017 填空原句），例：HP NonStop 用硬體與軟體雙重複製。</li>
+    </ul>
+  </div>
+  <div class="box pit"><span class="lbl">⚠ 易混淆</span>
+    <p>multiprocessor 是<b>一台電腦裡</b>多顆 CPU；clustered 是<b>多台電腦</b>（nodes）透過 LAN 或 InfiniBand 連起來，通常透過 SAN 共用儲存空間。</p>
+  </div>
+
+  <h3 class="sec" id="ch1-env" data-nav="虛擬化 / 運算環境">1.7 Virtualization 與 1.10 Computing Environments</h3>
+  <div class="tbl"><table>
+    <tr><th>術語</th><th>說明</th><th>例子</th></tr>
+    <tr><td><span class="t">virtualization</span> 虛擬化</td><td>把一台電腦的硬體抽象化成多個執行環境（VM），每個 VM 跑自己的 OS</td><td>Mac 上跑 Windows</td></tr>
+    <tr><td><span class="t">VMM / hypervisor</span></td><td>管理 VM 的軟體</td><td>—</td></tr>
+    <tr><td>Type 1 hypervisor</td><td>直接跑在硬體上</td><td>VMware ESXi、Xen</td></tr>
+    <tr><td>Type 2 hypervisor</td><td>跑在 host OS 上的應用程式 <span class="exam">🔥 2017 填空</span></td><td><b>VirtualBox</b>、VMware Workstation、Parallels</td></tr>
+    <tr><td><span class="t">real-time system</span> 即時系統</td><td><b>functions correctly only if it returns the correct result within its time constraints</b>（2019 填空原句）</td><td>hard：汽車煞車、心律調節器；soft：串流影音</td></tr>
+    <tr><td><span class="t">embedded system</span> 嵌入式系統</td><td><b>combination of computer hardware and software, and perhaps additional mechanical or other parts, designed to perform specific tasks</b>（考古原句）</td><td>微波爐、洗衣機、汽車引擎控制</td></tr>
+    <tr><td><span class="t">distributed system</span></td><td>多台實體分離、透過網路連接的電腦</td><td>Google 搜尋後端</td></tr>
+    <tr><td><span class="t">cloud computing</span></td><td>SaaS / PaaS / IaaS，透過網路提供運算、儲存</td><td>Gmail（SaaS）、AWS EC2（IaaS）</td></tr>
+  </table></div>
+  <div class="box rel"><span class="lbl">🔗 關聯</span>
+    <p>embedded system 大多有 <b>real-time</b> 需求（例如 ABS 煞車要在幾毫秒內反應），所以兩者常一起出現；但 real-time 不一定是 embedded（例如股票交易系統）。</p>
+  </div>
+
+  <!-- ================= CH2 ================= -->
+  <h2 class="unit" id="ch2" data-nav="Ch2 OS Structures"><span class="num">CH 2</span>Operating-System Structures 作業系統結構</h2>
+
+  <h3 class="sec" id="ch2-svc" data-nav="2.1–2.2 OS 服務與介面">2.1–2.2 OS Services 與 User Interface</h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p>OS 提供的服務：user interface、program execution、I/O operations、file-system manipulation、communications、error detection（對使用者有用）；resource allocation、logging、protection and security（讓系統有效率運作）。</p>
+    <p><span class="t">command interpreter / shell</span> <span class="zh">命令直譯器</span>：讀取使用者輸入的指令並執行。<span class="exam">🔥 近年填空</span></p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>介面</th><th>說明</th><th>例子</th></tr>
+    <tr><td><span class="t">CLI</span> command-line interface</td><td>文字指令，功能強、可寫 script 自動化</td><td>macOS Terminal 的 zsh、bash</td></tr>
+    <tr><td><span class="t">GUI</span> graphical user interface</td><td>視窗、圖示、滑鼠操作（desktop metaphor）</td><td>macOS Aqua、Windows 桌面</td></tr>
+    <tr><td><span class="t">touch-screen interface</span></td><td>手勢操作</td><td>iPhone、iPad</td></tr>
+  </table></div>
+
+  <h3 class="sec" id="ch2-sc" data-nav="2.3 System Calls">2.3 System Calls 系統呼叫</h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">system call</span>：<b>提供使用者程式請 OS 代為執行 OS 工作的管道</b>，是 OS 服務的程式介面。通常以 trap 的形式，跳到 interrupt vector 中特定位置。</p>
+    <p><span class="t">API</span>（Application Programming Interface）：程式設計師實際呼叫的函式（如 POSIX API、Windows API、Java API），API 內部再去呼叫 system call。</p>
+  </div>
+  <div class="flow-title">// printf("hi") 背後發生什麼事</div>
+  <ol class="flow">
+    <li><b class="s">程式呼叫 C 函式庫的 <code>printf()</code></b><span class="d">API，仍在 user mode</span></li>
+    <li><b class="s">C library 呼叫 <code>write()</code> system call</b><span class="d">把 system call 編號放進暫存器</span></li>
+    <li><b class="s">執行 trap（或 syscall）指令 → 切到 kernel mode</b><span class="d">mode bit 0</span></li>
+    <li><b class="s">system call interface 依編號查表，呼叫 kernel 中的 <code>write</code> 實作</b><span class="d">把資料送到螢幕的 device driver</span></li>
+    <li><b class="s">回傳狀態值，return 回 user mode</b><span class="d">printf 回傳，程式繼續</span></li>
+  </ol>
+  <div class="box rel"><span class="lbl">🔗 API vs System call</span>
+    <p>為何不直接呼叫 system call？<b>可攜性（portability）</b>：同一份用 POSIX API 寫的程式可以在任何支援 POSIX 的系統編譯；另外 system call 細節比較複雜，API 比較好用。<b>一個 API 不一定對應一個 system call</b>（例如 <code>abs()</code> 根本不需要 system call）。</p>
+  </div>
+  <h4 class="sub">傳遞參數的 3 種方法</h4>
+  <div class="tbl"><table>
+    <tr><th>方法</th><th>做法</th><th>優缺點</th></tr>
+    <tr><td><span class="t">registers</span></td><td>直接放在 CPU 暫存器</td><td>最快，但暫存器數量有限</td></tr>
+    <tr><td><span class="t">block / table</span></td><td>參數存在記憶體中的一塊區域，把位址放進暫存器</td><td>參數個數不受限（Linux、Solaris 使用）</td></tr>
+    <tr><td><span class="t">stack</span></td><td>程式 push 到 stack，OS pop 出來</td><td>參數個數不受限</td></tr>
+  </table></div>
+  <h4 class="sub">System call 6 大類</h4>
+  <div class="tbl"><table>
+    <tr><th>類別</th><th>UNIX 例子</th><th>Windows 例子</th></tr>
+    <tr><td>Process control 行程控制</td><td><code>fork()</code> <code>exit()</code> <code>wait()</code></td><td><code>CreateProcess()</code> <code>ExitProcess()</code></td></tr>
+    <tr><td>File management 檔案管理</td><td><code>open()</code> <code>read()</code> <code>write()</code> <code>close()</code></td><td><code>CreateFile()</code> <code>ReadFile()</code></td></tr>
+    <tr><td>Device management 裝置管理</td><td><code>ioctl()</code></td><td><code>SetConsoleMode()</code></td></tr>
+    <tr><td>Information maintenance 資訊維護</td><td><code>getpid()</code> <code>alarm()</code> <code>sleep()</code></td><td><code>GetCurrentProcessID()</code></td></tr>
+    <tr><td>Communications 通訊</td><td><code>pipe()</code> <code>shm_open()</code> <code>mmap()</code></td><td><code>CreatePipe()</code></td></tr>
+    <tr><td>Protection 保護</td><td><code>chmod()</code> <code>chown()</code></td><td><code>SetFileSecurity()</code></td></tr>
+  </table></div>
+
+  <h3 class="sec" id="ch2-link" data-nav="2.5–2.7 Linker / 設計原則">2.5 Linkers & Loaders、2.7 設計原則</h3>
+  <ol class="flow">
+    <li><b class="s">compiler 把 source code 編譯成 <span class="t">relocatable object file</span></b><span class="d">main.c → main.o</span></li>
+    <li><b class="s"><span class="t">linker</span> 把多個 object file 與函式庫合併成 executable</b><span class="d">main.o + libc → a.out</span></li>
+    <li><b class="s"><span class="t">loader</span> 把 executable 載入記憶體</b><span class="d">在 shell 輸入 <code>./a.out</code> 時，shell 用 fork() + exec() 叫 loader 載入</span></li>
+    <li><b class="s">dynamically linked library（DLL / .so）在執行時才載入</b><span class="d">多個程式共用同一份函式庫</span></li>
+  </ol>
+  <div class="box def"><span class="lbl">📌 Mechanism vs Policy</span>
+    <p><span class="t">mechanism</span> <span class="zh">機制</span>決定<b>「怎麼做」</b>；<span class="t">policy</span> <span class="zh">政策</span>決定<b>「做什麼」</b>。兩者分開，改 policy 時不用改 mechanism，彈性較高。</p>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>timer 能中斷 CPU 是 <b>mechanism</b>；「每個使用者能用 CPU 多久」是 <b>policy</b>。Linux 的排程器提供機制，「I/O-bound 程式優先」則是政策。</p>
+  </div>
+  <p class="small">2.6 為什麼 app 綁定 OS？因為每個 OS 的 system call、執行檔格式（ELF vs PE）、ABI 都不同。</p>
+
+  <h3 class="sec" id="ch2-struct" data-nav="2.8 OS 結構比較">2.8 OS Structure 結構 <span class="exam">🔥 考古 2017、2019、近年 必考</span></h3>
+  <div class="tbl"><table>
+    <tr><th>結構</th><th>核心概念</th><th>例子</th></tr>
+    <tr><td><span class="t">monolithic</span> 單體式</td><td>所有功能放在同一個 kernel address space；<b>OS is written as a collection of procedures, each of which can call any of the other ones whenever it needs to</b>（填空原句）</td><td>傳統 UNIX、Linux</td></tr>
+    <tr><td><span class="t">layered</span> 分層式</td><td>OS 切成多層，最底層是硬體、最上層是 UI，每層只使用下一層的服務</td><td>THE OS；網路的 TCP/IP 概念類似</td></tr>
+    <tr><td><span class="t">microkernel</span> 微核心</td><td>只把最必要的功能留在 kernel（process / memory 管理、IPC），其他服務搬到 user space，用 <b>message passing</b> 溝通</td><td>Mach、QNX、Darwin（部分）</td></tr>
+    <tr><td><span class="t">LKM</span> loadable kernel modules</td><td>kernel 只有核心元件，其他服務以 module 形式在<b>開機時或執行中動態載入</b></td><td>Linux 驅動程式（<code>insmod</code>/<code>rmmod</code>）、Solaris</td></tr>
+    <tr><td><span class="t">hybrid</span> 混合式</td><td>結合多種結構，兼顧效能、安全、可用性</td><td>Windows、macOS（Darwin = Mach + BSD）、Android</td></tr>
+  </table></div>
+
+  <div class="grid2">
+    <div class="diagram">
+      <div class="arch">
+        <div class="row"><div class="tag">user mode</div><div class="cell u">Application</div><div class="cell u">File System</div><div class="cell u">Device Driver</div></div>
+        <div class="msg">⇅ messages（透過 microkernel 轉送）⇅</div>
+        <div class="row"><div class="tag">kernel mode</div><div class="cell k">IPC</div><div class="cell k">memory mgmt</div><div class="cell k">CPU scheduling</div></div>
+        <div class="row"><div class="tag"></div><div class="cell h">hardware</div></div>
+      </div>
+      <div class="dcap">Microkernel 架構（Fig 2.15，考試畫圖題）</div>
+    </div>
+    <div class="diagram">
+      <div class="arch">
+        <div class="row"><div class="tag">user mode</div><div class="cell u">Applications / shell / libraries</div></div>
+        <div class="msg">⇅ system-call interface ⇅</div>
+        <div class="row"><div class="tag">kernel mode</div><div class="cell k">file system · CPU scheduling · memory mgmt · device drivers · IPC …<br>（全部在同一個 kernel，彼此直接呼叫）</div></div>
+        <div class="row"><div class="tag"></div><div class="cell h">hardware</div></div>
+      </div>
+      <div class="dcap">Monolithic 架構</div>
+    </div>
+  </div>
+
+  <h4 class="sub">三大比較：extensibility、performance、security <span class="exam">🔥 2019 (12%)</span></h4>
+  <div class="tbl"><table>
+    <tr><th>面向</th><th>monolithic</th><th>microkernel</th><th>LKM</th></tr>
+    <tr><td>extensibility 擴充性</td><td class="badc">低：新增功能要改 kernel、重新編譯、重開機</td><td class="good">高：新增服務只要加一個 user-space 程式，kernel 不用改</td><td class="good">高：module 可單獨編譯，<b>執行中載入/卸載，不用重開機</b></td></tr>
+    <tr><td>performance 效能</td><td class="good">高：函式直接呼叫，沒有額外負擔</td><td class="badc">低：服務間要靠 message passing，需多次 user↔kernel 切換與訊息複製</td><td class="good">高：module 在 kernel space，<b>不需要 message passing</b>，直接呼叫</td></tr>
+    <tr><td>security / reliability 安全可靠</td><td class="badc">低：任一部分出錯可能讓整個 kernel crash</td><td class="good">高：大部分服務以 user process 執行，某服務掛掉不會拖垮 kernel</td><td class="badc">中低：module 跑在 kernel mode，有 bug 或惡意的 module 會危害整個系統</td></tr>
+  </table></div>
+  <div class="box hl"><span class="lbl">⚡ 一句話記憶</span>
+    <p><b>LKM 結合了 monolithic 的效能與 microkernel 的彈性</b>（「while maintaining the performance benefits of a monolithic system」），但安全性不如 microkernel。投影片：LKM「Like the microkernel approach but is more efficient」、「similar to a layered system but more flexible（any module can call any other module）」。</p>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>插上新的 USB 網卡：Linux 用 <code>insmod</code> 載入驅動 module，不用重開機。Windows NT 早期是 layered microkernel，因效能太差，NT 4.0 把很多層搬回 kernel space，到 XP 已經比較接近 monolithic，這就是 microkernel 效能問題的真實案例。</p>
+  </div>
+  <div class="box pit"><span class="lbl">⚠ 歷屆作答卷常見失分</span>
+    <ul>
+      <li>寫「microkernel 把常用功能放在 kernel mode 節省時間」→ <b>被扣分</b>：microkernel 是把功能<b>移出</b> kernel，目的不是省時間。</li>
+      <li>寫「monolithic 一個出錯整個 process 暫停」→ <b>被扣分</b>：應該是<b>整個 kernel／整個系統</b>受影響。</li>
+      <li>寫 LKM 優點只寫「速度快」而沒寫原因 → 要寫出「不需 message passing」。</li>
+    </ul>
+  </div>
+
+  <h3 class="sec" id="ch2-boot" data-nav="2.9 Boot / Debugging">2.9 Building & Booting、2.10 Debugging</h3>
+  <ol class="flow">
+    <li><b class="s"><span class="t">BIOS</span> 或 <span class="t">UEFI</span> 韌體執行</b><span class="d">BIOS 舊式、多階段；UEFI 較新，單一完整的 boot manager，速度較快</span></li>
+    <li><b class="s">載入 boot loader（如 <span class="t">GRUB</span>）</b><span class="d">顯示開機選單，可選擇要開的 kernel</span></li>
+    <li><b class="s">載入壓縮過的 kernel image 並解壓縮</b><span class="d">Linux 的 vmlinuz</span></li>
+    <li><b class="s">掛載暫時的 root file system（initramfs）</b></li>
+    <li><b class="s">切換到真正的 root file system，啟動 <code>systemd</code></b><span class="d">第一個 process，之後啟動其他服務</span></li>
+  </ol>
+  <p class="small">Debugging：<span class="t">core dump</span>（process 當掉時的記憶體快照）、<span class="t">crash dump</span>（kernel 當掉）、performance tuning 工具（<code>top</code>、<code>ps</code>）、tracing 工具（<code>strace</code>、BCC/eBPF）。</p>
+
+  <!-- ================= CH3 ================= -->
+  <h2 class="unit" id="ch3" data-nav="Ch3 Processes"><span class="num">CH 3</span>Processes 行程</h2>
+
+  <h3 class="sec" id="ch3-concept" data-nav="3.1 Process 與 Memory layout">3.1 Process 概念與 Memory Layout <span class="exam">🔥 2019 (4%)</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">process</span> <span class="zh">行程</span>：<b>a program in execution</b>，執行中的程式，是 OS 的工作單位。</p>
+    <p><span class="t">program</span> 是存在磁碟上的<b>被動</b>實體（executable file）；process 是<b>主動</b>實體，有 program counter 和一組資源。程式被載入記憶體後才變成 process。</p>
+  </div>
+  <div class="diagram">
+    <div class="mem">
+      <div class="seg stack">stack ↓</div><div class="note">高位址。函式呼叫時的暫存資料：<b>local variables、參數、return address</b>。往下長</div>
+      <div class="seg free">（free）</div><div class="note">stack 與 heap 中間的空間，兩者往中間成長</div>
+      <div class="seg heap">heap ↑</div><div class="note">執行時動態配置：<code>malloc()</code>、<code>new</code>。往上長</div>
+      <div class="seg data">data</div><div class="note"><b>global / static variables</b>，例：<code>int value = 1;</code></div>
+      <div class="seg text">text</div><div class="note">低位址。<b>executable code</b>（程式碼）</div>
+    </div>
+    <div class="dcap">Memory layout of a process（Fig 3.1）</div>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>同時開兩個 Chrome 視窗＝兩個 process，<b>text section 相同</b>（同一份程式碼），但 data、heap、stack 各自不同。JVM 本身是一個 process，用來解譯執行 Java 程式。</p>
+  </div>
+
+  <h3 class="sec" id="ch3-state" data-nav="3.1 Process State / PCB">Process State 與 PCB</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 640 270" role="img" aria-label="Process state diagram">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff8a5c"/></marker></defs>
+      <g stroke="#ff8a5c" stroke-width="1.8" fill="none" marker-end="url(#ar)">
+        <path d="M118,62 L170,108"/>
+        <path d="M468,108 L520,62"/>
+        <path d="M252,140 L386,140"/>
+        <path d="M390,116 Q320,72 252,116"/>
+        <path d="M450,148 L362,206"/>
+        <path d="M278,206 L208,148"/>
+      </g>
+      <g font-size="14" font-weight="700" text-anchor="middle">
+        <rect x="40" y="28" width="94" height="36" rx="18" fill="#1e2433" stroke="#2a3245"/><text x="87" y="51">new</text>
+        <rect x="500" y="28" width="118" height="36" rx="18" fill="#1e2433" stroke="#2a3245"/><text x="559" y="51">terminated</text>
+        <rect x="148" y="110" width="104" height="38" rx="19" fill="rgba(90,169,255,.18)" stroke="#5aa9ff"/><text x="200" y="134">ready</text>
+        <rect x="386" y="110" width="110" height="38" rx="19" fill="rgba(255,90,54,.2)" stroke="#ff5a36"/><text x="441" y="134">running</text>
+        <rect x="268" y="206" width="104" height="38" rx="19" fill="rgba(255,200,87,.15)" stroke="#ffc857"/><text x="320" y="230">waiting</text>
+      </g>
+      <g font-size="11.5" fill="#97a0b3" text-anchor="middle">
+        <text x="120" y="98" style="fill:#97a0b3">admitted</text>
+        <text x="520" y="98" style="fill:#97a0b3">exit</text>
+        <text x="320" y="162" style="fill:#97a0b3">scheduler dispatch</text>
+        <text x="320" y="84" style="fill:#97a0b3">interrupt</text>
+        <text x="470" y="192" style="fill:#97a0b3">I/O or event wait</text>
+        <text x="168" y="192" style="fill:#97a0b3">I/O or event completion</text>
+      </g>
+    </svg>
+    <div class="dcap">Process State Diagram（Fig 3.2）</div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>狀態</th><th>中文</th><th>意義</th><th>例子</th></tr>
+    <tr><td><span class="t">new</span></td><td>新建</td><td>正在建立</td><td>剛呼叫 <code>fork()</code></td></tr>
+    <tr><td><span class="t">ready</span></td><td>就緒</td><td>在 ready queue 等 CPU</td><td>一切準備好，只差 CPU</td></tr>
+    <tr><td><span class="t">running</span></td><td>執行</td><td>指令正在 CPU 上執行</td><td>正在計算</td></tr>
+    <tr><td><span class="t">waiting</span></td><td>等待</td><td>等某事件（I/O 完成、收到 signal）</td><td>呼叫 <code>scanf()</code> 等使用者輸入</td></tr>
+    <tr><td><span class="t">terminated</span></td><td>結束</td><td>執行完畢</td><td>呼叫 <code>exit()</code></td></tr>
+  </table></div>
+  <div class="box pit"><span class="lbl">⚠ 易錯</span>
+    <p><b>waiting 結束後是回到 ready，不是直接回 running</b>，因為 CPU 可能正被別人使用，要重新排隊。running → ready 是因為 <b>interrupt</b>（例如 time slice 用完）。</p>
+  </div>
+  <div class="box def"><span class="lbl">📌 定義 PCB</span>
+    <p><span class="t">PCB</span>（Process Control Block，行程控制區塊，也叫 task control block）：OS 用來代表一個 process 的資料結構，存放：</p>
+    <ul>
+      <li><b>process state</b>、<b>program counter</b>（下一個要執行的指令位址）、<b>CPU registers</b></li>
+      <li><b>CPU-scheduling information</b>（priority、queue 指標）、<b>memory-management information</b>（base/limit register、page table）</li>
+      <li><b>accounting information</b>（CPU 用量、PID）、<b>I/O status information</b>（已開啟檔案、分配到的裝置）</li>
+    </ul>
+    <p class="small">Linux 中 PCB 是 C 結構 <code>task_struct</code>。支援 thread 的系統，PCB 會擴充成存放每個 thread 的資訊（多個 PC）。</p>
+  </div>
+
+  <h3 class="sec" id="ch3-sched" data-nav="3.2 排程與 Context switch">3.2 Process Scheduling 與 Context Switch <span class="exam">🔥 2017 填空、2019 (8%)</span></h3>
+  <div class="tbl"><table>
+    <tr><th>名詞</th><th>說明</th></tr>
+    <tr><td><span class="t">ready queue</span></td><td>已在記憶體、準備好等 CPU 的 process 排隊處（通常是 linked list，串 PCB）</td></tr>
+    <tr><td><span class="t">wait queue</span></td><td>等待某事件（如 I/O 完成）的 process 排隊處，不同事件有不同 queue</td></tr>
+    <tr><td><span class="t">CPU scheduler</span></td><td>從 ready queue 選一個 process 給 CPU core，執行非常頻繁（至少每 100 ms 一次），<b>必須很快</b></td></tr>
+    <tr><td><span class="t">swapping</span></td><td>中期排程：記憶體不夠時把 process 換出到磁碟（swap out），之後再換回（swap in），降低 <span class="t">degree of multiprogramming</span></td></tr>
+  </table></div>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">context</span> <span class="zh">行程的上下文</span>：存在 PCB 裡的 process 狀態，包括 <b>CPU registers 的值、process state、memory-management information</b>。</p>
+    <p><span class="t">context switch</span> <span class="zh">內文切換</span>：<b>save the state of the old process and load the saved state of the new process</b>（2017 填空原句）。</p>
+  </div>
+  <div class="flow-title">// Context switch 的步驟（P0 → P1）</div>
+  <ol class="flow">
+    <li><b class="s">P0 執行中，發生 interrupt 或 system call</b><span class="d">CPU 進入 kernel mode，OS 取得控制權</span></li>
+    <li><b class="s">把 P0 的 context 存進 PCB0</b><span class="d">program counter、registers、state 等</span></li>
+    <li><b class="s">更新 P0 狀態並放入對應 queue</b><span class="d">ready queue（time slice 用完）或 wait queue（等 I/O）</span></li>
+    <li><b class="s">CPU scheduler 從 ready queue 選出 P1</b></li>
+    <li><b class="s">從 PCB1 載入 P1 的 context</b><span class="d">還原 registers、切換 memory-management 資訊（page table）</span></li>
+    <li><b class="s">切回 user mode，跳到 P1 的 PC 繼續執行</b><span class="d">P0 此時處於 idle</span></li>
+  </ol>
+  <div class="box hl"><span class="lbl">⚡ 重要觀念</span>
+    <p>Context-switch time 是 <b>pure overhead</b>（純粹的額外負擔），切換期間系統沒做任何有用的事，一般需要幾 microseconds，速度高度依賴硬體支援（例如有些 CPU 提供多組暫存器，切換只要改指標）。</p>
+  </div>
+
+  <h3 class="sec" id="ch3-ops" data-nav="3.3 fork / exec / wait">3.3 Operations on Processes：fork()、exec()、wait()</h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <ul>
+      <li><code>fork()</code>：建立新的 child process，child 是 parent address space 的<b>複本</b>。回傳值：<b>child 拿到 0，parent 拿到 child 的 PID</b>，失敗回傳負值。</li>
+      <li><code>exec()</code>（如 <code>execlp()</code>）：用新的程式<b>取代</b>目前 process 的記憶體內容，成功就不會返回。</li>
+      <li><code>wait()</code>：parent 等待 child 結束。</li>
+      <li><code>exit()</code>：結束 process，資源歸還 OS。</li>
+    </ul>
+  </div>
+  <div class="flow-title">// Shell 執行一個指令（老師投影片的 shell 範例）</div>
+  <ol class="flow">
+    <li><b class="s">shell 讀取指令，例如 <code>ls</code></b></li>
+    <li><b class="s">呼叫 <code>fork()</code> 複製出 child</b><span class="d">兩個 process 從 fork() 之後的下一行繼續跑</span></li>
+    <li><b class="s">child（pid == 0）呼叫 <code>execlp("ls", ...)</code></b><span class="d">child 的記憶體被換成 ls 程式</span></li>
+    <li><b class="s">parent（pid &gt; 0）呼叫 <code>wait()</code></b><span class="d">等 child 執行完</span></li>
+    <li><b class="s">child 執行完 <code>exit()</code>，parent 從 wait 返回</b><span class="d">shell 印出下一個提示字元</span></li>
+  </ol>
+  <div class="box hl"><span class="lbl">⚡ fork() 輸出題必背規則</span>
+    <ul>
+      <li>fork 之後 parent 和 child 有<b>各自獨立的變數複本</b>，child 改 <code>value</code> <b>不會</b>影響 parent。</li>
+      <li>fork 之前的程式只執行一次；fork 之後、if 判斷之外的程式<b>兩邊都會執行</b>。</li>
+      <li>parent 有 <code>wait(NULL)</code> → child 的輸出一定先印完。</li>
+      <li>同一 process 內的 thread <b>共享</b> global 變數（見 Ch4）。</li>
+    </ul>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>名詞</th><th>說明</th><th>例子</th></tr>
+    <tr><td><span class="t">zombie</span> 殭屍行程</td><td>child 已結束，但 parent 還沒呼叫 wait()，PCB 還留在 process table</td><td>parent 忘了 wait，<code>ps</code> 看到 &lt;defunct&gt;</td></tr>
+    <tr><td><span class="t">orphan</span> 孤兒行程</td><td>parent 沒 wait 就先結束，child 還在跑</td><td>Linux 會把它交給 <code>init/systemd</code> 收養</td></tr>
+    <tr><td><span class="t">cascading termination</span></td><td>parent 結束時，OS 連同所有 child 一起終止</td><td>部分系統不允許 orphan</td></tr>
+  </table></div>
+
+  <h3 class="sec" id="ch3-ipc" data-nav="3.4 IPC 兩種模型">3.4 IPC：Shared Memory vs Message Passing <span class="exam">🔥 每年必考</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">cooperating process</span> <span class="zh">合作行程</span>：會影響其他 process 或被影響的 process。合作的理由：<b>information sharing、computation speedup、modularity</b>。</p>
+    <p><span class="t">IPC</span>（Interprocess Communication，行程間通訊）：讓 cooperating processes 交換資料的機制，兩種基本模型：</p>
+    <ul>
+      <li><span class="t">shared memory</span>：建立一塊共用記憶體區域，雙方直接讀寫該區域。</li>
+      <li><span class="t">message passing</span>：透過 OS 提供的 <code>send()</code> / <code>receive()</code> 交換訊息。</li>
+    </ul>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 640 250" role="img" aria-label="IPC models">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffc857"/></marker></defs>
+      <g font-size="13" text-anchor="middle">
+        <text x="160" y="18" style="fill:#ff8a5c;font-weight:700">(a) Message passing</text>
+        <rect x="80" y="30" width="160" height="34" fill="rgba(90,169,255,.15)" stroke="#2a3245"/><text x="160" y="52">process A</text>
+        <rect x="80" y="64" width="160" height="34" fill="rgba(90,169,255,.15)" stroke="#2a3245"/><text x="160" y="86">process B</text>
+        <rect x="80" y="98" width="160" height="40" fill="none" stroke="#2a3245" stroke-dasharray="4 3"/>
+        <rect x="80" y="138" width="160" height="70" fill="rgba(255,90,54,.15)" stroke="#2a3245"/>
+        <text x="160" y="158" font-size="12">message queue</text>
+        <g font-size="11"><rect x="90" y="166" width="28" height="22" fill="#1e2433" stroke="#ff8a5c"/><text x="104" y="181">m0</text><rect x="118" y="166" width="28" height="22" fill="#1e2433" stroke="#ff8a5c"/><text x="132" y="181">m1</text><rect x="146" y="166" width="28" height="22" fill="#1e2433" stroke="#ff8a5c"/><text x="160" y="181">m2</text><text x="190" y="181">…</text><rect x="202" y="166" width="28" height="22" fill="#1e2433" stroke="#ff8a5c"/><text x="216" y="181">mn</text></g>
+        <text x="160" y="202" font-size="11.5" style="fill:#97a0b3">kernel</text>
+        <path d="M80,47 Q40,100 88,176" stroke="#ffc857" stroke-width="1.8" fill="none" marker-end="url(#ar2)"/>
+        <path d="M232,176 Q290,130 240,81" stroke="#ffc857" stroke-width="1.8" fill="none" marker-end="url(#ar2)"/>
+        <text x="160" y="232" font-size="11.5" style="fill:#97a0b3">A send() → kernel → B receive()</text>
+
+        <text x="480" y="18" style="fill:#ff8a5c;font-weight:700">(b) Shared memory</text>
+        <rect x="400" y="30" width="160" height="40" fill="rgba(90,169,255,.15)" stroke="#2a3245"/><text x="480" y="55">process A</text>
+        <rect x="400" y="70" width="160" height="40" fill="rgba(255,200,87,.2)" stroke="#ffc857"/><text x="480" y="95">shared memory</text>
+        <rect x="400" y="110" width="160" height="40" fill="rgba(90,169,255,.15)" stroke="#2a3245"/><text x="480" y="135">process B</text>
+        <rect x="400" y="150" width="160" height="58" fill="rgba(255,90,54,.15)" stroke="#2a3245"/><text x="480" y="184">kernel</text>
+        <path d="M560,50 Q600,70 562,88" stroke="#ffc857" stroke-width="1.8" fill="none" marker-end="url(#ar2)"/>
+        <path d="M560,130 Q600,110 562,94" stroke="#ffc857" stroke-width="1.8" fill="none" marker-end="url(#ar2)"/>
+        <text x="480" y="232" font-size="11.5" style="fill:#97a0b3">A 寫入共享區 → B 直接讀（不經 kernel）</text>
+      </g>
+    </svg>
+    <div class="dcap">Communications models（Fig 3.11，考試必畫）</div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th>shared memory</th><th>message passing</th></tr>
+    <tr><td>速度</td><td class="good">快：建立好之後就是一般記憶體存取，<b>不需 kernel 介入</b></td><td class="badc">較慢：每次 send/receive 都是 system call，需要 kernel intervention</td></tr>
+    <tr><td>kernel 參與</td><td>只有建立（<code>shm_open</code>、attach）時需要 system call</td><td>每則訊息都要</td></tr>
+    <tr><td>同步與保護</td><td class="badc"><b>由程式設計師自行負責</b>，要避免同時寫入同一位置（protection and synchronization are needed）</td><td class="good">OS 處理，不會有寫入衝突（no conflicts need be avoided）</td></tr>
+    <tr><td>適合資料量</td><td>大量資料</td><td>少量資料</td></tr>
+    <tr><td>分散式環境</td><td class="badc">難：雙方要能存取同一塊記憶體</td><td class="good">容易：適合不同電腦間通訊</td></tr>
+    <tr><td>例子</td><td>POSIX <code>shm_open()</code> + <code>mmap()</code></td><td>Mach message、聊天程式、socket</td></tr>
+  </table></div>
+  <div class="box rel"><span class="lbl">🔗 關聯 microkernel</span>
+    <p>microkernel 的各服務之間就是用 <b>message passing</b> 溝通，所以 message passing「較慢」的缺點，正是 microkernel 效能差的原因。兩題常常連在一起考。</p>
+  </div>
+
+  <h3 class="sec" id="ch3-pc" data-nav="Producer-Consumer 問題">Producer-Consumer Problem <span class="exam">🔥 2017、2019、近年</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">producer-consumer problem</span> <span class="zh">生產者–消費者問題</span>：cooperating processes 的典型範例。<b>producer 產生資料放進 buffer，consumer 從 buffer 取出使用</b>。必須同步：buffer 滿時 producer 不能放，buffer 空時 consumer 不能拿。</p>
+    <ul>
+      <li><span class="t">unbounded buffer</span>：buffer 大小無限制，producer 永遠能放，只有 consumer 可能要等。</li>
+      <li><span class="t">bounded buffer</span>：buffer 大小固定，兩邊都可能要等。</li>
+    </ul>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>web server（producer）產生 HTML，browser（consumer）讀取；compiler 產生組合語言給 assembler 用。</p>
+  </div>
+  <div class="code"><span class="c">// Shared-memory 解法（bounded buffer, circular array）</span>
+<span class="k">#define</span> BUFFER_SIZE 10
+item buffer[BUFFER_SIZE];
+<span class="k">int</span> in = 0;   <span class="c">// 下一個空位</span>
+<span class="k">int</span> out = 0;  <span class="c">// 第一個有資料的位置</span>
+
+<span class="c">/* Producer */</span>                              <span class="c">/* Consumer */</span>
+<span class="k">while</span> (true) {                            <span class="k">while</span> (true) {
+  <span class="k">while</span> (((in+1) % BUFFER_SIZE) == out)      <span class="k">while</span> (in == out)
+    ; <span class="c">// full, 等待</span>                             ; <span class="c">// empty, 等待</span>
+  buffer[in] = next_produced;               next_consumed = buffer[out];
+  in = (in+1) % BUFFER_SIZE;                out = (out+1) % BUFFER_SIZE;
+}                                         }</div>
+  <div class="box hl"><span class="lbl">⚡ 為什麼最多只能放 BUFFER_SIZE − 1 個？</span>
+    <p>空的條件是 <code>in == out</code>。如果允許放滿 10 個，<code>in</code> 會繞一圈回到 <code>out</code>，此時也是 <code>in == out</code>，<b>無法分辨「全空」還是「全滿」</b>，所以犧牲一格：<code>(in+1) % SIZE == out</code> 就算滿。</p>
+  </div>
+  <div class="code"><span class="c">// Message-passing 解法</span>
+<span class="c">/* Producer */</span>                    <span class="c">/* Consumer */</span>
+<span class="k">while</span> (true) {                  <span class="k">while</span> (true) {
+  <span class="c">/* produce next_produced */</span>     receive(next_consumed);
+  send(next_produced);              <span class="c">/* consume next_consumed */</span>
+}                               }</div>
+
+  <h3 class="sec" id="ch3-mp" data-nav="3.6 Message passing 細節">3.6 Message Passing 的設計選擇</h3>
+  <div class="tbl"><table>
+    <tr><th>議題</th><th>選項 A</th><th>選項 B</th></tr>
+    <tr><td><span class="t">naming</span> 命名</td><td><b>direct</b>：明確指定對方 <code>send(P, msg)</code>；一條 link 只連兩個 process</td><td><b>indirect</b>：透過 <span class="t">mailbox / port</span> <code>send(A, msg)</code>；一條 link 可連多個 process</td></tr>
+    <tr><td><span class="t">synchronization</span> 同步</td><td><b>blocking (synchronous)</b>：send 等到對方收到；receive 等到有訊息</td><td><b>nonblocking (asynchronous)</b>：send 送出就繼續；receive 拿到訊息或 null</td></tr>
+    <tr><td><span class="t">buffering</span> 緩衝</td><td><b>zero capacity</b>：sender 必須等 receiver（rendezvous）</td><td><b>bounded / unbounded capacity</b>：queue 有限 n 個 / 無限，sender 滿了才等 / 永不等</td></tr>
+  </table></div>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">rendezvous</span> <span class="zh">會合</span>：send 和 receive 都是 blocking 時，雙方「碰面」才完成交換，此時 producer-consumer 問題變得很簡單。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>IPC 實例</th><th>說明</th></tr>
+    <tr><td><span class="t">ordinary pipe</span></td><td>單向、需要 parent-child 關係，<code>pipe(fd)</code>，fd[0] 讀、fd[1] 寫。例：<code>ls | grep txt</code></td></tr>
+    <tr><td><span class="t">named pipe (FIFO)</span></td><td>可雙向、不需 parent-child、process 結束後仍存在，<code>mkfifo()</code></td></tr>
+    <tr><td><span class="t">socket</span></td><td>IP address + port，網路兩端通訊。例：瀏覽器連 web server</td></tr>
+    <tr><td><span class="t">RPC</span> remote procedure call</td><td>像呼叫本機函式一樣呼叫遠端程式，stub 負責 marshalling 參數</td></tr>
+    <tr><td>Mach / Windows ALPC</td><td>Mach 全以 message 溝通（ports）；Windows 用 advanced local procedure call</td></tr>
+  </table></div>
+
+  <!-- ================= CH4 ================= -->
+  <h2 class="unit" id="ch4" data-nav="Ch4 Threads"><span class="num">CH 4</span>Threads & Concurrency 執行緒與並行</h2>
+
+  <h3 class="sec" id="ch4-ov" data-nav="4.1 Thread 概念與好處">4.1 Thread 概念與好處 <span class="exam">🔥 近年 process vs thread</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">thread</span> <span class="zh">執行緒</span>：CPU 使用的基本單位，包含 <b>thread ID、program counter、register set、stack</b>；同一 process 的 thread 共享 <b>code section、data section、open files、signals</b>。也被稱為 lightweight process（LWP）。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th>process</th><th>thread</th></tr>
+    <tr><td>定位</td><td>資源分配的單位</td><td>CPU 排程的單位</td></tr>
+    <tr><td>記憶體</td><td>各自獨立的 address space</td><td><b>共享</b>所屬 process 的 code、data、heap、files</td></tr>
+    <tr><td>各自私有</td><td>全部</td><td><b>PC、registers、stack</b></td></tr>
+    <tr><td>建立成本</td><td>高（複製 address space）</td><td>低（Solaris 中建立 thread 比 process 快約 30 倍）</td></tr>
+    <tr><td>context switch</td><td>慢（要換 memory-management 資訊）</td><td>快</td></tr>
+    <tr><td>溝通</td><td>需要 IPC（shared memory / message passing）</td><td>直接讀寫 global 變數</td></tr>
+    <tr><td>容錯</td><td>一個 process crash 不影響其他</td><td>一個 thread crash 可能拖垮整個 process</td></tr>
+  </table></div>
+  <div class="tbl"><table>
+    <tr><th>4 大好處</th><th>說明</th><th>例子</th></tr>
+    <tr><td><span class="t">responsiveness</span> 回應性</td><td>某 thread 被 block 或做長時間運算，其他 thread 仍能回應使用者</td><td>Word 存檔時你仍能繼續打字</td></tr>
+    <tr><td><span class="t">resource sharing</span> 資源共享</td><td>thread 預設共享 process 的記憶體與資源，不需另外設定 IPC</td><td>producer thread 與 consumer thread 共用 buffer</td></tr>
+    <tr><td><span class="t">economy</span> 經濟</td><td>建立與切換 thread 比 process 便宜</td><td>web server 每個請求開 thread 而非 fork process</td></tr>
+    <tr><td><span class="t">scalability</span> 擴展性</td><td>多處理器上 thread 可真正平行執行</td><td>影片轉檔用滿 8 核心</td></tr>
+  </table></div>
+  <div class="box ex"><span class="lbl">💡 例子：多執行緒 web server</span>
+    <ol class="flow" style="margin:8px 0 0">
+      <li><b class="s">client 發出 request</b></li>
+      <li><b class="s">server 建立（或從 thread pool 拿）一個新 thread 處理這個 request</b></li>
+      <li><b class="s">server 主 thread 立刻回去等下一個 request</b><span class="d">不用等前一個處理完</span></li>
+    </ol>
+  </div>
+
+  <h3 class="sec" id="ch4-mc" data-nav="4.2 Concurrency vs Parallelism">4.2 Multicore Programming：Concurrency vs Parallelism <span class="exam">🔥 2019 (8%)</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">concurrency</span> <span class="zh">並行</span>：讓<b>多個工作都有進展</b>（make progress）。單核心時是 <b>interleaved</b>（交錯）執行。</p>
+    <p><span class="t">parallelism</span> <span class="zh">平行</span>：<b>同一時間真的</b>執行多個工作，需要多核心。</p>
+  </div>
+  <div class="box hl"><span class="lbl">⚡ 重要觀念</span>
+    <p><b>有 parallelism 一定有 concurrency，但有 concurrency 不一定有 parallelism。</b>單核心 CPU 快速切換，提供平行的「錯覺」，是 concurrent 但不是 parallel。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th><span class="t">data parallelism</span> 資料平行</th><th><span class="t">task parallelism</span> 任務平行</th></tr>
+    <tr><td>切分方式</td><td>把<b>同一份資料</b>切塊分給各核心，每核心做<b>相同運算</b></td><td>把<b>不同工作</b>分給各核心，每個 thread 做<b>不同運算</b></td></tr>
+    <tr><td>例子</td><td>雙核心加總 array[N]：core0 加前半、core1 加後半</td><td>thread A 加總、thread B 求乘積；producer thread / consumer thread</td></tr>
+  </table></div>
+  <p><b>Multicore 程式設計 5 大挑戰</b>：<span class="t">dividing activities</span>（找出可平行的工作）、<span class="t">balance</span>（工作量平均）、<span class="t">data splitting</span>（資料切分）、<span class="t">data dependency</span>（資料相依需同步）、<span class="t">testing and debugging</span>（執行順序多變，難除錯）。</p>
+  <div class="box hl"><span class="lbl">⚡ 申論：多執行緒程式在單核心上會比單執行緒快嗎？</span>
+    <p><b>可能會</b>，前提是程式有 <b>I/O 或會 block 的操作</b>：一個 thread 等 I/O 時，另一個 thread 可以用 CPU，CPU 不會閒著，提升 responsiveness 與 throughput。<br>但如果是<b>純 CPU 運算（CPU-bound）</b>，單核心上同一時間只有一個 thread 在跑，多執行緒反而多了建立與切換的 overhead，<b>可能更慢</b>。</p>
+    <p><b>在多處理器上會比單處理器快嗎？</b>若使用 <b>one-to-one 或 many-to-many</b> 模型（kernel 能看到多個 thread），thread 可以分到不同 CPU 真正平行執行，所以會更快；但若是 <b>many-to-one</b>，kernel 只看到一個 thread，多 CPU 也沒用。</p>
+  </div>
+
+  <h3 class="sec" id="ch4-models" data-nav="4.3 Multithreading Models">4.3 Multithreading Models <span class="exam">🔥 one-to-one 每年考</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">user thread</span> <span class="zh">使用者執行緒</span>：在 kernel 之上由 thread library 管理，<b>kernel 不知道它的存在</b>；建立與管理較快（不用進 kernel）。</p>
+    <p><span class="t">kernel thread</span> <span class="zh">核心執行緒</span>：由 OS 直接支援與管理，可被 kernel 排程到 CPU。Windows、Linux、macOS 都支援。</p>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 640 200" role="img" aria-label="Multithreading models">
+      <g font-size="11" style="fill:#97a0b3">
+        <text x="6" y="40" style="fill:#97a0b3">user</text><text x="6" y="150" style="fill:#97a0b3">kernel</text>
+      </g>
+      <line x1="50" y1="95" x2="630" y2="95" stroke="#2a3245" stroke-dasharray="5 4"/>
+      <g stroke="#ff8a5c" stroke-width="1.5">
+        <line x1="80" y1="44" x2="135" y2="140"/><line x1="115" y1="44" x2="135" y2="140"/><line x1="155" y1="44" x2="135" y2="140"/><line x1="190" y1="44" x2="135" y2="140"/>
+        <line x1="290" y1="44" x2="290" y2="140"/><line x1="325" y1="44" x2="325" y2="140"/><line x1="360" y1="44" x2="360" y2="140"/><line x1="395" y1="44" x2="395" y2="140"/>
+        <line x1="490" y1="44" x2="510" y2="140"/><line x1="525" y1="44" x2="510" y2="140"/><line x1="525" y1="44" x2="555" y2="140"/><line x1="560" y1="44" x2="555" y2="140"/><line x1="595" y1="44" x2="600" y2="140"/><line x1="560" y1="44" x2="600" y2="140"/>
+      </g>
+      <g fill="rgba(90,169,255,.25)" stroke="#5aa9ff">
+        <circle cx="80" cy="36" r="9"/><circle cx="115" cy="36" r="9"/><circle cx="155" cy="36" r="9"/><circle cx="190" cy="36" r="9"/>
+        <circle cx="290" cy="36" r="9"/><circle cx="325" cy="36" r="9"/><circle cx="360" cy="36" r="9"/><circle cx="395" cy="36" r="9"/>
+        <circle cx="490" cy="36" r="9"/><circle cx="525" cy="36" r="9"/><circle cx="560" cy="36" r="9"/><circle cx="595" cy="36" r="9"/>
+      </g>
+      <g fill="rgba(255,90,54,.3)" stroke="#ff5a36">
+        <rect x="124" y="140" width="22" height="22" rx="4"/>
+        <rect x="279" y="140" width="22" height="22" rx="4"/><rect x="314" y="140" width="22" height="22" rx="4"/><rect x="349" y="140" width="22" height="22" rx="4"/><rect x="384" y="140" width="22" height="22" rx="4"/>
+        <rect x="499" y="140" width="22" height="22" rx="4"/><rect x="544" y="140" width="22" height="22" rx="4"/><rect x="589" y="140" width="22" height="22" rx="4"/>
+      </g>
+      <g font-size="13" font-weight="700" text-anchor="middle">
+        <text x="135" y="190">many-to-one</text><text x="342" y="190">one-to-one</text><text x="545" y="190">many-to-many</text>
+      </g>
+    </svg>
+    <div class="dcap">藍圈 = user thread，橘方塊 = kernel thread</div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>模型</th><th>對應</th><th>優點</th><th>缺點</th><th>例子</th></tr>
+    <tr><td><span class="t">many-to-one</span></td><td>多個 user thread → 1 個 kernel thread</td><td>thread 管理在 user space，有效率</td><td class="badc">① 一個 thread 呼叫 <b>blocking system call，整個 process 被 block</b>（2017 填空）<br>② 同一時間只有一個 thread 能進 kernel，<b>多核心上無法平行</b></td><td>Solaris Green Threads（現已少用）</td></tr>
+    <tr><td><span class="t">one-to-one</span></td><td>每個 user thread → 1 個 kernel thread</td><td class="good">① 一個 thread block 時其他 thread 仍可執行，<b>concurrency 比 many-to-one 好</b><br>② 多個 thread 可在<b>多處理器上平行</b>執行</td><td class="badc">建立 user thread 就要建立 kernel thread，<b>kernel thread 太多會拖累系統效能</b>，所以常限制 thread 數量</td><td><b>Linux、Windows</b></td></tr>
+    <tr><td><span class="t">many-to-many</span></td><td>多個 user thread → 較少或等量的 kernel thread</td><td>可開很多 user thread，又能平行、block 時可排別人</td><td>實作困難</td><td>（少見）</td></tr>
+    <tr><td><span class="t">two-level</span></td><td>many-to-many ＋ 允許把某 user thread 綁定（bound）到一個 kernel thread</td><td>彈性最大</td><td>實作困難</td><td>舊版 Solaris</td></tr>
+  </table></div>
+  <div class="box rel"><span class="lbl">🔗 關聯與差異</span>
+    <p>one-to-one 的優點正好是 many-to-one 的兩個缺點反過來；它的缺點（kernel thread 開銷）則由 many-to-many 解決。<b>現代多核心系統大多用 one-to-one</b>，因為核心數多了，限制 kernel thread 數量變得不那麼重要。</p>
+  </div>
+
+  <h3 class="sec" id="ch4-lib" data-nav="4.4 Pthreads 與 fork 輸出">4.4 Thread Libraries：Pthreads <span class="exam">🔥 fork + pthread 輸出題</span></h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">Pthreads</span>：POSIX 標準（IEEE 1003.1c）定義的 thread 建立與同步 API，是<b>規格（specification）不是實作</b>。UNIX、Linux、macOS 皆有。</p>
+  </div>
+  <div class="flow-title">// Pthreads 基本流程</div>
+  <ol class="flow">
+    <li><b class="s"><code>pthread_attr_init(&amp;attr)</code></b><span class="d">設定 thread 屬性（使用預設值）</span></li>
+    <li><b class="s"><code>pthread_create(&amp;tid, &amp;attr, runner, param)</code></b><span class="d">建立新 thread，從 runner 函式開始執行</span></li>
+    <li><b class="s">新 thread 執行 <code>runner()</code>，結束時 <code>pthread_exit(0)</code></b><span class="d">pthread_exit 之後的程式不會執行</span></li>
+    <li><b class="s">主 thread 呼叫 <code>pthread_join(tid, NULL)</code> 等待</b><span class="d">類似 process 的 wait()</span></li>
+  </ol>
+  <div class="box hl"><span class="lbl">⚡ fork vs pthread 對 global 變數的影響</span>
+    <div class="code" style="margin:6px 0"><span class="k">int</span> value = 0;
+<span class="k">void</span> *runner(<span class="k">void</span> *p){ value = 5; pthread_exit(0); }
+
+<span class="c">// 情況 1：thread</span>
+pthread_create(&amp;tid, &amp;attr, runner, NULL);
+pthread_join(tid, NULL);
+printf(<span class="o">"%d"</span>, value);   <span class="c">// 印 5：thread 共享 data section</span>
+
+<span class="c">// 情況 2：fork</span>
+<span class="k">if</span> (fork() == 0) { value = 5; <span class="k">return</span> 0; }
+wait(NULL);
+printf(<span class="o">"%d"</span>, value);   <span class="c">// parent 印 0：child 改的是自己的複本</span></div>
+  </div>
+
+  <h3 class="sec" id="ch4-implicit" data-nav="4.5 Implicit Threading">4.5 Implicit Threading 隱式執行緒</h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">implicit threading</span>：把建立與管理 thread 的工作從程式設計師交給<b>編譯器與 run-time library</b>，程式設計師只要找出可平行的 task。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>技術</th><th>說明</th><th>例子</th></tr>
+    <tr><td><span class="t">thread pool</span></td><td>啟動時先建一批 thread 等工作；用現成的 thread 比新建快，且<b>限制 thread 總數</b>避免系統被拖垮</td><td>web server、Java <code>ExecutorService</code></td></tr>
+    <tr><td><span class="t">fork-join</span></td><td>主 thread 分出（fork）子 task，等全部完成再合併（join），適合遞迴分治</td><td>Java <code>ForkJoinPool</code> 做 merge sort</td></tr>
+    <tr><td><span class="t">OpenMP</span></td><td>C/C++/Fortran 用 compiler directive 標示平行區域</td><td><code>#pragma omp parallel for</code></td></tr>
+    <tr><td><span class="t">GCD</span> Grand Central Dispatch</td><td>Apple 技術，把 block 丟進 dispatch queue（serial / concurrent）</td><td>iOS app 背景下載</td></tr>
+    <tr><td><span class="t">Intel TBB</span></td><td>C++ template library，<code>parallel_for</code></td><td>—</td></tr>
+  </table></div>
+
+  <h3 class="sec" id="ch4-issue" data-nav="4.6 Threading Issues">4.6 Threading Issues</h3>
+  <div class="tbl"><table>
+    <tr><th>議題</th><th>重點</th><th>例子</th></tr>
+    <tr><td><code>fork()</code> / <code>exec()</code></td><td>多執行緒程式 fork 時，有的系統複製所有 thread、有的只複製呼叫的 thread；<b>fork 後立刻 exec 就只要複製呼叫者</b>（反正會被取代）</td><td>shell 執行指令</td></tr>
+    <tr><td><span class="t">signal handling</span></td><td>signal 該送給哪個 thread？同步 signal 送給造成它的 thread；非同步（如 Ctrl+C）可送給所有或特定 thread</td><td><code>kill()</code>、<code>pthread_kill()</code></td></tr>
+    <tr><td><span class="t">thread cancellation</span></td><td><b>asynchronous</b>：立刻終止目標 thread（危險，資源可能沒釋放）；<b>deferred</b>：目標 thread 定期檢查是否該結束，在安全的 <span class="t">cancellation point</span> 才結束（Pthreads 預設）</td><td>瀏覽器按「停止」取消載入</td></tr>
+    <tr><td><span class="t">TLS</span> thread-local storage</td><td>每個 thread 自己一份的資料，跨函式可見（不同於 local variable）</td><td>每個交易 thread 的交易編號</td></tr>
+    <tr><td><span class="t">scheduler activations</span></td><td>kernel 透過 <span class="t">upcall</span> 通知 thread library，搭配 <span class="t">LWP</span>（lightweight process，介於 user / kernel thread 間的虛擬處理器）</td><td>many-to-many 模型實作</td></tr>
+  </table></div>
+  <p class="small">4.7 OS 例子：Windows 每個 thread 有 ETHREAD / KTHREAD / TEB；Linux 不區分 process 與 thread，統稱 <b>task</b>，用 <code>clone()</code> 建立，flag 決定要共享多少資源（全部共享 ≈ thread，都不共享 ≈ fork）。</p>
+
+  <!-- ================= CH5 ================= -->
+  <h2 class="unit" id="ch5" data-nav="Ch5.1–5.2 CPU Scheduling"><span class="num">CH 5.1–5.2</span>CPU Scheduling 基本觀念</h2>
+
+  <h3 class="sec" id="ch5-burst" data-nav="5.1 CPU-I/O Burst / Scheduler">5.1 CPU–I/O Burst Cycle 與 CPU Scheduler</h3>
+  <div class="box def"><span class="lbl">📌 定義</span>
+    <p><span class="t">CPU–I/O burst cycle</span>：process 的執行由 <b>CPU 執行（CPU burst）</b> 與 <b>等 I/O（I/O burst）</b> 交替組成。</p>
+    <ul>
+      <li><span class="t">I/O-bound</span> 程式：很多<b>短</b>的 CPU burst（例：文字編輯器、網頁瀏覽）。</li>
+      <li><span class="t">CPU-bound</span> 程式：少數<b>長</b>的 CPU burst（例：影片轉檔、科學計算）。</li>
+    </ul>
+    <p><span class="t">CPU scheduler</span>：CPU 閒置時，從 <b>ready queue</b> 選一個 process 執行。ready queue 不一定是 FIFO，也可以是 priority queue、tree、無序 linked list。</p>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>CPU burst 長度分布（Fig 5.2）是指數型：<b>大量短 burst、少量長 burst</b>。這就是為什麼排程演算法通常偏好短工作，以及為什麼 multiprogramming 能大幅提升 CPU 使用率（大多數時間 process 在等 I/O）。</p>
+  </div>
+
+  <h3 class="sec" id="ch5-pre" data-nav="5.1 Preemptive / Dispatcher">Preemptive vs Nonpreemptive、Dispatcher</h3>
+  <p>CPU 排程決策可能發生在 process 的 4 種狀態轉換：</p>
+  <ol class="flow">
+    <li><b class="s">running → waiting</b><span class="d">例如發出 I/O request、呼叫 wait()</span></li>
+    <li><b class="s">running → ready</b><span class="d">例如 interrupt（time slice 用完）</span></li>
+    <li><b class="s">waiting → ready</b><span class="d">例如 I/O 完成</span></li>
+    <li><b class="s">terminates</b><span class="d">process 結束</span></li>
+  </ol>
+  <div class="box hl"><span class="lbl">⚡ 判斷規則</span>
+    <p><b>只在情況 1 和 4 排程 → nonpreemptive（cooperative）</b>：process 自願放棄 CPU，別無選擇一定要選新的。<br>情況 2、3 也會排程 → <b>preemptive</b>：OS 可以強行把 CPU 搶走。</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>比較</th><th><span class="t">nonpreemptive</span> 不可搶先</th><th><span class="t">preemptive</span> 可搶先</th></tr>
+    <tr><td>CPU 何時釋放</td><td>process 自己結束或進入 waiting 才釋放</td><td>OS 可隨時中斷並收回 CPU</td></tr>
+    <tr><td>排程時機</td><td>只有 1、4</td><td>1、2、3、4</td></tr>
+    <tr><td>回應性</td><td>差：長工作會卡住其他人</td><td>好，適合互動式系統</td></tr>
+    <tr><td>問題</td><td>一個 process 可能霸佔 CPU</td><td>存取共享資料時可能有 <b>race condition</b>，需要同步機制（Ch6）；kernel 設計要考慮在 system call 期間被搶先的情況</td></tr>
+    <tr><td>例子</td><td>早期 Windows 3.x</td><td><b>幾乎所有現代 OS</b>：Windows、macOS、Linux、UNIX</td></tr>
+  </table></div>
+  <div class="box def"><span class="lbl">📌 定義 Dispatcher</span>
+    <p><span class="t">dispatcher</span> <span class="zh">分派器</span>：把 CPU 控制權交給 CPU scheduler 選出的 process 的模組。</p>
+    <p><span class="t">dispatch latency</span> <span class="zh">分派延遲</span>：dispatcher 停止一個 process 並啟動另一個所花的時間，<b>越短越好</b>（每次 context switch 都會呼叫 dispatcher）。</p>
+  </div>
+  <div class="flow-title">// Dispatcher 的 3 個工作</div>
+  <ol class="flow">
+    <li><b class="s">Switching context</b><span class="d">把舊 process 的狀態存到 PCB，載入新 process 的狀態</span></li>
+    <li><b class="s">Switching to user mode</b><span class="d">mode bit 設回 1</span></li>
+    <li><b class="s">Jumping to the proper location in the user program</b><span class="d">跳到新 process 的 PC，從上次中斷的地方繼續執行</span></li>
+  </ol>
+  <div class="box rel"><span class="lbl">🔗 Scheduler vs Dispatcher</span>
+    <p><b>CPU scheduler 負責「選誰」</b>（決策）；<b>dispatcher 負責「把 CPU 交給它」</b>（執行切換）。這也是 mechanism（dispatcher）vs policy（scheduler 演算法）分離的例子。</p>
+  </div>
+
+  <h3 class="sec" id="ch5-crit" data-nav="5.2 Scheduling Criteria">5.2 Scheduling Criteria 排程評估指標</h3>
+  <div class="tbl"><table>
+    <tr><th>指標</th><th>中文</th><th>定義</th><th>目標</th><th>例子</th></tr>
+    <tr><td><span class="t">CPU utilization</span></td><td>CPU 使用率</td><td>CPU 忙碌的比例</td><td>最大化</td><td>40%（輕載）～90%（重載）</td></tr>
+    <tr><td><span class="t">throughput</span></td><td>產出量</td><td>單位時間完成的 process 數</td><td>最大化</td><td>長工作 1 個/小時；短交易 10 個/秒</td></tr>
+    <tr><td><span class="t">turnaround time</span></td><td>周轉時間</td><td><b>從提交（submission）到完成（completion）</b>的總時間，含等待記憶體、ready queue、CPU 執行、I/O</td><td>最小化</td><td>批次工作看這個</td></tr>
+    <tr><td><span class="t">waiting time</span></td><td>等待時間</td><td><b>在 ready queue 中等待</b>的總時間（不含 I/O 時間）</td><td>最小化</td><td>排程演算法唯一能直接影響的</td></tr>
+    <tr><td><span class="t">response time</span></td><td>回應時間</td><td>從提交 request 到<b>第一個回應</b>產生的時間（是開始回應，不是輸出完成）</td><td>最小化</td><td>互動式系統看這個</td></tr>
+  </table></div>
+  <div class="box hl"><span class="lbl">⚡ 重要觀念</span>
+    <ul>
+      <li>排程演算法<b>不影響</b>程式執行或做 I/O 的時間，<b>只影響在 ready queue 等待的時間</b>。</li>
+      <li>對互動式系統，比起平均 response time，<b>降低 response time 的變異數（variance）</b>更重要：穩定可預期比偶爾很快更好。</li>
+      <li>若一個 process 只有一段 CPU burst 且沒有 I/O：turnaround time = waiting time + burst time。</li>
+    </ul>
+  </div>
+  <div class="box ex"><span class="lbl">💡 例子</span>
+    <p>P1 在時間 0 到達，前面排了 6 ms 的工作，P1 本身要跑 4 ms：waiting time = 6，turnaround time = 6 + 4 = 10，若 P1 一上 CPU 就輸出第一個字，response time = 6。</p>
+  </div>
+  <div class="box rel"><span class="lbl">🔗 指標之間的取捨</span>
+    <p>提高 throughput（偏好短工作）可能讓長工作的 turnaround time 變很長；縮短 response time（頻繁切換）會增加 context switch overhead，反而降低 CPU utilization。</p>
+  </div>
+</section>
+
+<!-- =========================================================
+     TAB 2 : FLASHCARDS
+     ========================================================= -->
+<section class="panel" id="tab-cards">
+  <div class="hero">
+    <h1>Flashcard 翻牌記憶</h1>
+    <p>正面是英文術語或情境，點一下翻到背面看中文定義與例子。</p>
+  </div>
+  <div class="toolbar" id="fcToolbar">
+    <button class="btn on" data-f="all">全部</button>
+    <button class="btn" data-f="1">Ch1</button>
+    <button class="btn" data-f="2">Ch2</button>
+    <button class="btn" data-f="3">Ch3</button>
+    <button class="btn" data-f="4">Ch4</button>
+    <button class="btn" data-f="5">Ch5</button>
+    <button class="btn" id="fcShuffle">🔀 洗牌</button>
+    <button class="btn primary" id="fcReset">↺ 全部重置</button>
+    <span class="counter" id="fcCount"></span>
+  </div>
+  <div id="fcWrap"></div>
+</section>
+
+<!-- =========================================================
+     TAB 3 : QUIZ
+     ========================================================= -->
+<section class="panel" id="tab-quiz">
+  <div class="hero">
+    <h1>小測驗（20 題）</h1>
+    <p>每題只能選一次，選完立刻顯示解析，包含每個錯誤選項錯在哪裡。</p>
+  </div>
+  <div class="scorebar">
+    <span class="s">答對 <b id="qRight">0</b> / <span id="qDone">0</span> 已作答（共 <span id="qTotal">0</span> 題）</span>
+    <div class="prog"><i id="qProg"></i></div>
+    <button class="btn" id="qReset">↺ 重新作答</button>
+  </div>
+  <div id="quizWrap"></div>
+</section>
+
+<!-- =========================================================
+     TAB 4 : PAST EXAMS
+     ========================================================= -->
+<section class="panel" id="tab-exam">
+  <div class="hero">
+    <h1>考古題解析</h1>
+    <p>整理 2019、2017 兩份期中考題目，加上三份近年作答卷中看得出的出題方向與失分點。填空題答案預設模糊，<b>點一下才顯示</b>；申論題點「參考答案」展開。藍色標籤可以跳回對應的筆記段落。</p>
+  </div>
+
+  <h2 class="unit" id="ex-trend" data-nav="出題趨勢總覽"><span class="num">TREND</span>出題趨勢總覽</h2>
+  <div class="tbl"><table>
+    <tr><th>主題</th><th>2017</th><th>2019</th><th>近年作答卷</th><th>建議</th></tr>
+    <tr><td>Dual-mode（trap / system call / timer）</td><td>✔ 13%</td><td>✔ 15%</td><td>✔</td><td class="good">申論模板背熟</td></tr>
+    <tr><td>Microkernel / Monolithic / LKM 比較＋畫圖</td><td>✔ 16%</td><td>✔ 24%</td><td>✔</td><td class="good">三大面向比較表</td></tr>
+    <tr><td>IPC 兩種模型 + producer-consumer＋畫圖</td><td>✔ 12%</td><td>✔ 16%</td><td>✔</td><td class="good">兩張圖＋優缺點</td></tr>
+    <tr><td>One-to-one model</td><td>✔ 8%</td><td>✔ 11%</td><td>✔</td><td class="good">畫圖＋優缺點＋單/多處理器</td></tr>
+    <tr><td>fork() + Pthreads 輸出</td><td>✔ 10%</td><td>✔ 12%</td><td>—</td><td>練習追蹤 value</td></tr>
+    <tr><td>Memory layout / context switch</td><td>填空</td><td>✔ 12%</td><td>—</td><td>畫圖＋步驟</td></tr>
+    <tr><td>填空：bootstrap、clustered、embedded、monolithic…</td><td>✔ 20%</td><td>✔ 10%</td><td>✔</td><td>背考古原句</td></tr>
+  </table></div>
+  <div class="box pit"><span class="lbl">⚠ 作答卷上看到的扣分點</span>
+    <ul>
+      <li>填空要寫<b>完整術語</b>：「bootstrap」只寫一半、「start」等都被扣分；「symmetric multiprocessing」要拼對。</li>
+      <li>Shared memory 缺點寫「容易被修改」被圈起來：應寫<b>需要程式設計師自行處理 synchronization 與 protection</b>。</li>
+      <li>Message passing 優點寫「×（沒有）」只拿部分分：優點是<b>不會有寫入衝突、適合分散式系統、適合少量資料</b>。</li>
+      <li>畫圖題多半有分（圖給 3～6 分），<b>一定要畫圖並標 user mode / kernel mode</b>。</li>
+      <li>Process vs thread 只寫「thread 可平行處理」只拿 2 分：要寫出<b>共享哪些資源、各自私有哪些、建立與切換成本</b>。</li>
+    </ul>
+  </div>
+
+  <!-- 2019 -->
+  <h2 class="unit" id="ex-2019" data-nav="2019/11/12 期中考"><span class="num">2019</span>2019/11/12 期中考</h2>
+  <h3 class="sec" id="ex19-fill" data-nav="2019 I. 填空">I. Fill in the Blanks（10%）</h3>
+  <div class="blanks">
+    <div class="blank">1. OS contains a large amount of functionality combined into one level; procedures can call any other → <span class="a">monolithic</span></div>
+    <div class="blank">2. Two or more individual systems or nodes joined together, high availability → <span class="a">clustered</span></div>
+    <div class="blank">3. Functions correctly only if it returns the correct result within its time constraints → <span class="a">real-time</span></div>
+    <div class="blank">4. Combination of hardware and software, perhaps mechanical parts, for specific tasks → <span class="a">embedded</span></div>
+    <div class="blank">5. Initializes all aspects of the system, loads OS kernel, starts executing the OS → <span class="a">bootstrap program</span></div>
+  </div>
+
+  <h3 class="sec" id="ex19-q" data-nav="2019 II. 問答">II. Questions（90%）</h3>
+  <div class="paper">
+    <div class="eq">
+      <div class="qq">1. Give examples and describe the differences between trap, system call, and interrupt. Using trap, system call, and timer interrupt as examples to discuss why modern OS take advantage of hardware-supported dual-mode operation. <span class="pts">(15%)</span></div>
+      <a class="goto" data-goto="ch1-trap">→ Interrupt / Trap / System call</a><a class="goto" data-goto="ch1-dual">→ Dual-mode</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>差異：</b>interrupt 由<b>硬體</b>非同步產生（例：鍵盤輸入、I/O 完成）；trap 是<b>軟體</b>產生的中斷，由錯誤引起（例：除以 0、非法記憶體存取）；system call 是使用者程式<b>刻意</b>請 OS 服務，以 trap 的形式進入 kernel（例：<code>fork()</code>、<code>read()</code>）。</p>
+        <p><b>為何需要 dual-mode：</b>用 mode bit（kernel 0 / user 1）區分 OS 與使用者程式，保護 OS 與其他程式。</p>
+        <ul>
+          <li>trap：使用者程式出錯或在 user mode 執行 privileged instruction 時，硬體 trap 到 kernel mode 由 OS 處理，錯誤不會破壞 OS 或其他程式。</li>
+          <li>system call：I/O 等特權操作只能透過 system call 由 OS 在 kernel mode 檢查後代為執行，結束後切回 user mode。</li>
+          <li>timer interrupt：避免程式無窮迴圈霸佔 CPU，時間到 OS 一定能拿回控制權；設定 timer 是 privileged instruction，使用者無法關閉。</li>
+        </ul>
+        <p>以上機制都依賴<b>硬體</b>維護的 mode bit，軟體無法自行切換，保護才可靠。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">2. (a) Draw the diagram of a typical microkernel and describe the microkernel approach. (b) Describe the loadable kernel modules approach. (c) Compare microkernel and LKM in terms of extensibility, performance, and security. <span class="pts">(24%)</span></div>
+      <a class="goto" data-goto="ch2-struct">→ 2.8 OS 結構比較</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>(a)</b> 畫出 Fig 2.15：user mode 有 Application、File System、Device Driver；kernel mode 的 microkernel 只有 IPC、memory management、CPU scheduling；元件之間以 messages 溝通。<br>Microkernel approach：把非必要元件從 kernel 移出，實作成在各自 address space 的 user-level 程式；kernel 主要提供 client 與各服務之間的 <b>message passing</b> 通訊（例：Mach、QNX）。</p>
+        <p><b>(b)</b> LKM：kernel 只保留核心元件，其他服務（驅動程式、檔案系統）以 module 形式在開機或執行時<b>動態載入</b>；module 在 kernel space，有定義好的介面，任何 module 可直接呼叫其他 module（例：Linux <code>insmod</code>/<code>rmmod</code>）。</p>
+        <p><b>(c)</b></p>
+        <div class="tbl"><table>
+          <tr><th></th><th>microkernel</th><th>LKM</th></tr>
+          <tr><td>extensibility</td><td>好：新增服務在 user space 加程式即可，不用改 kernel</td><td>好：module 單獨編譯，執行中載入/卸載不用重開機</td></tr>
+          <tr><td>performance</td><td>差：服務間 message passing 需要多次 user/kernel 切換</td><td>好：module 在 kernel 內直接呼叫，不需 message passing</td></tr>
+          <tr><td>security</td><td>好：服務以 user process 執行，出錯不會讓 kernel 掛掉</td><td>較差：module 在 kernel mode 執行，有問題的 module 會危及整個系統</td></tr>
+        </table></div>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">3. What is the producer-consumer problem? Discuss the strengths and weaknesses of two IPC models to solve it. Draw the diagram for each model. <span class="pts">(16%)</span></div>
+      <a class="goto" data-goto="ch3-ipc">→ IPC</a><a class="goto" data-goto="ch3-pc">→ Producer-Consumer</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>問題：</b>producer 產生資料放進 buffer，consumer 從 buffer 取出；必須同步，buffer 滿時 producer 不能放、空時 consumer 不能拿。</p>
+        <p><b>Shared memory</b>（圖：A、shared memory、B、kernel 上下堆疊，A/B 都指向共享區）：buffer 放在共享記憶體，用 in/out 指標實作 circular buffer。<br>優：速度快，建立後是一般記憶體存取，不需 kernel。缺：同步與保護由程式設計師負責；不易用在分散式系統。</p>
+        <p><b>Message passing</b>（圖：A、B 與 kernel 中的 message queue m0…mn）：producer <code>send()</code>，consumer <code>receive()</code>，buffer 由 OS 提供。<br>優：不需處理寫入衝突，實作簡單；適合分散式環境。缺：每次都要 system call，kernel 介入，較慢。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">4. Draw the diagram and describe the memory layout of a process. What is the context of a process? Describe the actions taken by a kernel to context-switch between processes. <span class="pts">(12%)</span></div>
+      <a class="goto" data-goto="ch3-concept">→ Memory layout</a><a class="goto" data-goto="ch3-sched">→ Context switch</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>Memory layout</b>（高位址到低位址）：stack（區域變數、參數、return address）→ free → heap（動態配置）→ data（global 變數）→ text（程式碼）。</p>
+        <p><b>Context</b>：存在 PCB 中的 process 狀態，包括 CPU registers、program counter、process state、memory-management information。</p>
+        <p><b>Context switch</b>：interrupt 或 system call 發生 → kernel 把舊 process 的 context 存進它的 PCB → 將其放入 ready/wait queue → scheduler 選出新 process → 從新 process 的 PCB 載入 context（含記憶體管理資訊）→ 切回 user mode 執行新 process。切換時間是 pure overhead。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">5. One-to-one model: (a) Draw and describe it. (b) Can a multithreaded application perform better on a multiprocessor than on a single-processor system? (c) On a single processor, can multithreaded perform better than single-threaded? <span class="pts">(11%)</span></div>
+      <a class="goto" data-goto="ch4-models">→ Multithreading models</a><a class="goto" data-goto="ch4-mc">→ Concurrency vs Parallelism</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>(a)</b> 每個 user thread 對應一個 kernel thread（畫 4 條平行線連接 user space 與 kernel space）。一個 thread block 時其他仍可執行；可在多處理器平行；缺點是建立 user thread 就要建立 kernel thread，數量過多影響效能。Linux、Windows 採用。</p>
+        <p><b>(b)</b> 可以。one-to-one 中每個 thread 都是 kernel 可排程的單位，可分配到不同 CPU <b>真正平行</b>執行（parallelism），所以比單處理器快。</p>
+        <p><b>(c)</b> 視情況。若程式有 I/O 或 blocking 操作，一個 thread 等待時另一個可使用 CPU，提升效能與回應性（concurrency）。若是純 CPU-bound 運算，單處理器一次只能跑一個 thread，多執行緒反而增加建立與切換的 overhead，不會更快。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">6. What would be the output of the following C program using UNIX fork() and Pthreads? <span class="pts">(12%)</span></div>
+      <a class="goto" data-goto="ch4-lib">→ Pthreads</a><a class="goto" data-goto="ch3-ops">→ fork()</a>
+<div class="code"><span class="k">int</span> value = 1;
+<span class="k">void</span> *start(<span class="k">void</span> *param){
+  printf(<span class="o">" (a) %d \n"</span>, value);
+  value++;
+  pthread_exit(0);
+  value++;                       <span class="c">// 不會執行</span>
+}
+<span class="k">void</span> main(){
+  printf(<span class="o">" (b) %d \n"</span>, value);
+  pid = fork();
+  value++;
+  <span class="k">if</span> (pid == 0) {                 <span class="c">/* child */</span>
+    value++;
+    pthread_attr_init(&amp;attr);
+    pthread_create(&amp;tid, &amp;attr, start, NULL);
+    pthread_join(tid, NULL);
+    printf(<span class="o">" (c) %d \n"</span>, value);
+    value++;
+  } <span class="k">else if</span> (pid &gt; 0) {         <span class="c">/* parent */</span>
+    value++;
+    wait(NULL);
+    printf(<span class="o">" (d) %d \n"</span>, value);
+    value++;
+  }
+  printf(<span class="o">" (e) %d \n"</span>, value);
+  value++;
+}</div>
+      <details class="ans"><summary>參考答案與追蹤</summary>
+        <div class="tbl"><table>
+          <tr><th>步驟</th><th>parent 的 value</th><th>child 的 value</th><th>輸出</th></tr>
+          <tr><td>fork 前印 (b)</td><td>1</td><td>—</td><td><code>(b) 1</code></td></tr>
+          <tr><td>fork 後 value++</td><td>2</td><td>2</td><td></td></tr>
+          <tr><td>child: value++</td><td></td><td>3</td><td></td></tr>
+          <tr><td>child 的 thread 印 (a)，value++</td><td></td><td>3 → 4</td><td><code>(a) 3</code></td></tr>
+          <tr><td>child join 後印 (c)，value++</td><td></td><td>4 → 5</td><td><code>(c) 4</code></td></tr>
+          <tr><td>child 印 (e)</td><td></td><td>5</td><td><code>(e) 5</code></td></tr>
+          <tr><td>parent: value++，wait 等 child 結束</td><td>3</td><td></td><td></td></tr>
+          <tr><td>parent 印 (d)，value++</td><td>3 → 4</td><td></td><td><code>(d) 3</code></td></tr>
+          <tr><td>parent 印 (e)</td><td>4</td><td></td><td><code>(e) 4</code></td></tr>
+        </table></div>
+        <p><b>輸出順序：</b><code>(b) 1 → (a) 3 → (c) 4 → (e) 5 → (d) 3 → (e) 4</code></p>
+        <p class="small">關鍵：thread 和 child 共享 value（同一 process）；parent 與 child 是不同複本。parent 有 <code>wait(NULL)</code>，所以 child 的輸出全部在 (d) 之前。pthread_exit 後面的 value++ 不會執行。</p>
+      </details>
+    </div>
+  </div>
+
+  <!-- 2017 -->
+  <h2 class="unit" id="ex-2017" data-nav="2017/11/23 期中考"><span class="num">2017</span>2017/11/23 期中考</h2>
+  <h3 class="sec" id="ex17-fill" data-nav="2017 I. 填空">I. Fill in the Blank（20%）</h3>
+  <div class="blanks">
+    <div class="blank">1. Can suffer a failure of any single component and still continue operation → <span class="a">fault-tolerant</span></div>
+    <div class="blank">2. Two or more individual systems or nodes joined together → <span class="a">clustered</span></div>
+    <div class="blank">3. What virtualization software do you use? → <span class="a">VirtualBox（或 VMware Workstation）</span></div>
+    <div class="blank">4. All processors are peers, no boss-worker relationship → <span class="a">symmetric multiprocessing (SMP)</span></div>
+    <div class="blank">5. Hardware + software (+ mechanical parts) for specific tasks → <span class="a">embedded</span></div>
+    <div class="blank">6. OS keeps several jobs in memory; when one waits, switches to another → <span class="a">multiprogramming</span></div>
+    <div class="blank">7. Large amount of functionality combined into one level → <span class="a">monolithic</span></div>
+    <div class="blank">8. Initializes the system, loads OS kernel, starts executing the OS → <span class="a">bootstrap program</span></div>
+    <div class="blank">9. Save the state of the old process and load the saved state of the new process via a ___ → <span class="a">context switch</span></div>
+    <div class="blank">10. A thread makes a blocking system call, the entire process will block for the ___ model → <span class="a">many-to-one</span></div>
+  </div>
+
+  <h3 class="sec" id="ex17-q" data-nav="2017 II. 問答">II. Questions（80%）</h3>
+  <div class="paper">
+    <div class="eq">
+      <div class="qq">1. What is dual-mode operation? Using trap, system call, and timer interrupt as examples to discuss why modern OS take advantage of hardware-supported dual-mode operation. <span class="pts">(13%)</span></div>
+      <a class="goto" data-goto="ch1-dual">→ Dual-mode 申論模板</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p>Dual-mode：硬體提供 mode bit 區分 <b>kernel mode（0）</b>與 <b>user mode（1）</b>；interrupt / trap / system call 發生時切到 kernel mode 執行 OS 程式，完成後切回 user mode。privileged instruction 只能在 kernel mode 執行。</p>
+        <p>trap、system call、timer 的論述同 2019 第 1 題：trap 攔截錯誤與非法指令、system call 讓特權操作必須經過 OS 檢查、timer 防止程式霸佔 CPU。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">2. Describe the microkernel and the modular kernel approach in OS design. Compare their strengths and weaknesses in terms of extensibility. <span class="pts">(16%)</span></div>
+      <a class="goto" data-goto="ch2-struct">→ 2.8 OS 結構比較</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p><b>Microkernel</b>：只把最小必要功能（process / memory 管理、IPC）留在 kernel，其他服務以 user-level process 執行，透過 message passing 溝通。<br><b>Modular（LKM）</b>：核心元件在 kernel，其他服務以 module 動態連結進 kernel。</p>
+        <p><b>Extensibility 比較：</b>兩者都容易擴充。microkernel 新增服務只要在 user space 加一個 server process，kernel 不必修改，且新服務出錯不影響 kernel（擴充較安全）；但新服務與他人溝通都要透過 message passing，擴充越多 overhead 越大。LKM 新增 module 不用重新編譯 kernel、不用重開機即可載入，且 module 間直接呼叫、效率高；但新加入的 module 在 kernel mode 執行，若有 bug 會危害整個系統。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">3. Take the producer-consumer problem as an example to discuss the strengths and weaknesses of two IPC models. Draw the diagram for each model. <span class="pts">(12%)</span></div>
+      <a class="goto" data-goto="ch3-ipc">→ IPC</a>
+      <details class="ans"><summary>參考答案</summary><p>同 2019 第 3 題。</p></details>
+    </div>
+    <div class="eq">
+      <div class="qq">4. What is the one-to-one multithreading model? Discuss its strengths and weaknesses. <span class="pts">(8%)</span></div>
+      <a class="goto" data-goto="ch4-models">→ Multithreading models</a>
+      <details class="ans"><summary>參考答案</summary>
+        <p>每個 user thread 對應一個 kernel thread。<br><b>優點</b>：比 many-to-one 有更好的 concurrency，一個 thread 呼叫 blocking system call 時其他 thread 仍可執行；多個 thread 可在多處理器上平行執行。<br><b>缺點</b>：每建立一個 user thread 就要建立對應的 kernel thread，開銷大，kernel thread 太多會拖累系統效能，因此系統通常限制 thread 數量。</p>
+      </details>
+    </div>
+    <div class="eq">
+      <div class="qq">5. What would be the output for the following C program using UNIX fork() and Pthreads? <span class="pts">(10%)</span></div>
+      <a class="goto" data-goto="ch4-lib">→ Pthreads</a>
+<div class="code"><span class="k">int</span> value = 1;
+<span class="k">void</span> runner(){ value++; printf(<span class="o">"(a) %d "</span>, value); }
+<span class="k">void</span> *start(<span class="k">void</span> *param){ runner(); value++; pthread_exit(0); }
+
+<span class="k">int</span> main(){
+  value++;
+  pid = fork();
+  value++;
+  <span class="k">if</span> (pid == 0) {                       <span class="c">/* child */</span>
+    value++;
+    printf(<span class="o">"(b) %d "</span>, value);
+    pthread_attr_init(&amp;attr);
+    value++;
+    pthread_create(&amp;tid, &amp;attr, start, NULL);
+    pthread_join(tid, NULL);
+    value++;
+  } <span class="k">else if</span> (pid &gt; 0) {               <span class="c">/* parent */</span>
+    value++;
+    wait(NULL);
+    runner();
+  }
+  value++;
+  printf(<span class="o">"(c) %d "</span>, value);
+}</div>
+      <details class="ans"><summary>參考答案與追蹤</summary>
+        <div class="tbl"><table>
+          <tr><th>步驟</th><th>parent</th><th>child</th><th>輸出</th></tr>
+          <tr><td>value++（fork 前）</td><td>2</td><td>—</td><td></td></tr>
+          <tr><td>fork 後 value++</td><td>3</td><td>3</td><td></td></tr>
+          <tr><td>child: value++，印 (b)</td><td></td><td>4</td><td><code>(b) 4</code></td></tr>
+          <tr><td>child: value++</td><td></td><td>5</td><td></td></tr>
+          <tr><td>thread: runner() value++ 印 (a)</td><td></td><td>6</td><td><code>(a) 6</code></td></tr>
+          <tr><td>thread: value++，exit</td><td></td><td>7</td><td></td></tr>
+          <tr><td>child join 後 value++</td><td></td><td>8</td><td></td></tr>
+          <tr><td>child: value++ 印 (c)</td><td></td><td>9</td><td><code>(c) 9</code></td></tr>
+          <tr><td>parent: value++，wait</td><td>4</td><td></td><td></td></tr>
+          <tr><td>parent: runner() value++ 印 (a)</td><td>5</td><td></td><td><code>(a) 5</code></td></tr>
+          <tr><td>parent: value++ 印 (c)</td><td>6</td><td></td><td><code>(c) 6</code></td></tr>
+        </table></div>
+        <p><b>輸出：</b><code>(b) 4 (a) 6 (c) 9 (a) 5 (c) 6</code></p>
+        <div class="box pit"><span class="lbl">⚠ 注意</span><p>考古照片上的手寫推導把 child 的 (a) 寫成 5，是<b>錯的</b>：child 建立 thread 前已經多做一次 value++（變 5），thread 裡的 runner 再 ++ 才印，所以是 6。另外 runner() 在 thread 裡被呼叫時，改的是 child 的 value（共享），不是 parent 的。</p></div>
+      </details>
+    </div>
+  </div>
+
+  <h2 class="unit" id="ex-recent" data-nav="近年作答卷整理"><span class="num">RECENT</span>近年作答卷整理</h2>
+  <p>三份學生作答卷（含老師批改）看不到完整題目，但從答案可以推回題型：</p>
+  <div class="tbl"><table>
+    <tr><th>題型</th><th>從作答卷推測的題目</th><th>對應筆記</th></tr>
+    <tr><td>填空</td><td>bootstrap program、clustered、NUMA、time-sharing、monolithic、layered、symmetric multiprocessing、shell、context switch、VirtualBox、module</td><td><a class="goto" data-goto="ch1-arch">1.3 架構</a><a class="goto" data-goto="ch1-multi">Multiprogramming</a><a class="goto" data-goto="ch2-svc">Shell</a></td></tr>
+    <tr><td>選擇題</td><td>新一屆試卷出現選擇題（多選，如 abcd、bf）及排序題（B、A、D、C、D）</td><td>整體觀念</td></tr>
+    <tr><td>畫圖說明</td><td>Multiprogramming 記憶體配置與 CPU 切換</td><td><a class="goto" data-goto="ch1-multi">Multiprogramming</a></td></tr>
+    <tr><td>畫圖說明</td><td>System call 時 user / kernel mode 切換（mode bit 0/1）</td><td><a class="goto" data-goto="ch1-dual">Dual-mode</a></td></tr>
+    <tr><td>流程</td><td>Exception（如 5/0）發生時 OS 如何處理：CPU → 查 interrupt vector → handler → 回 user mode 或終止</td><td><a class="goto" data-goto="ch1-when">OS 何時執行</a></td></tr>
+    <tr><td>比較＋畫圖</td><td>Microkernel、monolithic、LKM 的架構圖與優缺點</td><td><a class="goto" data-goto="ch2-struct">2.8 結構</a></td></tr>
+    <tr><td>比較＋畫圖</td><td>Shared memory vs message passing ＋ producer-consumer</td><td><a class="goto" data-goto="ch3-ipc">IPC</a></td></tr>
+    <tr><td>比較＋畫圖</td><td>Process vs thread 差異</td><td><a class="goto" data-goto="ch4-ov">Thread</a></td></tr>
+    <tr><td>畫圖說明</td><td>One-to-one model 與其優缺點</td><td><a class="goto" data-goto="ch4-models">Models</a></td></tr>
+  </table></div>
+</section>
+</main>
+
+<script>
+/* ======================= DATA: FLASHCARDS ======================= */
+const CARDS = [
+  // ---- Ch1
+  {ch:1, front:`Bootstrap program`, back:`開機時第一個執行的程式，存在 ROM / EEPROM / flash。負責初始化系統、把 OS kernel 載入記憶體並開始執行 OS。`, ex:`按下 MacBook 電源，韌體中的程式載入 macOS kernel。`},
+  {ch:1, front:`Interrupt vector`, back:`存放各種中斷對應的 ISR（中斷服務程式）位址的表，CPU 收到中斷後查表跳到對應的處理程式。`, ex:`鍵盤中斷 → 查表 → 執行鍵盤驅動的 ISR。`},
+  {ch:1, scn:true, front:`程式執行到 a = 5/0; 時，CPU 產生的是哪一類事件？`, back:`Trap / Exception（例外）：軟體錯誤造成的 software-generated interrupt，CPU 切到 kernel mode 交給 OS 處理，通常終止程式。`, ex:`存取 NULL 指標造成 segmentation fault 也是 trap。`},
+  {ch:1, front:`Dual-mode operation（mode bit）`, back:`硬體用 mode bit 區分 kernel mode（0）與 user mode（1）。發生 interrupt / trap / system call 時切到 kernel mode，結束後切回 user mode，用來保護 OS 和其他程式。`, ex:`user 程式想直接控制磁碟 → 不允許，必須透過 system call。`},
+  {ch:1, front:`Privileged instruction`, back:`特權指令：可能造成危害、只能在 kernel mode 執行的指令。在 user mode 執行會被硬體 trap 給 OS。`, ex:`設定 timer、I/O 控制、關閉中斷、切換到 kernel mode。（讀取時間不是特權指令）`},
+  {ch:1, scn:true, front:`學生程式寫了 while(1){} 卻沒讓整台電腦當機，靠的是什麼機制？`, back:`Timer 計時器：OS 把 CPU 交給程式前先設定 timer，時間到產生 interrupt，OS 就能拿回控制權。修改 timer 是特權指令，使用者無法關掉。`, ex:`time-sharing 系統每個 time slice 結束也是靠 timer 中斷。`},
+  {ch:1, front:`Multiprogramming vs Time-sharing`, back:`Multiprogramming：記憶體放多個 process，目前的需要等待（如 I/O）時才切換，目的提高 CPU 使用率。Time-sharing（multitasking）：用 time slice 頻繁切換，目的縮短回應時間。`, ex:`程式 A 讀磁碟時 CPU 改跑 B（前者）；邊打字邊聽歌（後者）。`},
+  {ch:1, front:`SMP（Symmetric multiprocessing）`, back:`對稱多處理：所有處理器地位平等、沒有 boss-worker 關係，每顆都能執行所有工作含 OS 功能。對比 asymmetric：boss 處理器分派工作給 worker。`, ex:`Windows、Linux、macOS 都是 SMP。`},
+  {ch:1, front:`NUMA`, back:`Non-Uniform Memory Access 非均勻記憶體存取：CPU 存取自己附近的記憶體較快，存取其他 CPU 的記憶體較慢。對比 UMA：存取任何記憶體時間相同。`, ex:`雙插槽伺服器，CPU0 存取掛在 CPU1 的 RAM 比較慢。`},
+  {ch:1, front:`Clustered system`, back:`叢集系統：兩台以上獨立電腦（nodes）連在一起，通常共用儲存（SAN），提供 high availability 或高效能運算。asymmetric：一台 hot standby；symmetric：都在跑並互相監控。`, ex:`網站的多台 web server 放在 load balancer 後面。`},
+  {ch:1, front:`Fault-tolerant / Graceful degradation`, back:`Fault-tolerant 容錯：任何單一元件故障仍能持續運作。Graceful degradation 優雅降級：服務能力隨存活硬體比例下降而非全部停擺。`, ex:`HP NonStop 用硬體與軟體雙重複製達成容錯。`},
+  {ch:1, front:`Real-time vs Embedded system`, back:`Real-time 即時：必須在時間限制內回傳正確結果才算正確（hard / soft）。Embedded 嵌入式：硬體＋軟體（＋機械）組合，為特定工作設計，常有即時需求。`, ex:`汽車 ABS 煞車＝hard real-time 的 embedded system；Netflix 串流＝soft real-time。`},
+  {ch:1, front:`Type 2 hypervisor`, back:`跑在 host OS 上的虛擬化軟體（VMM），guest OS 在其上的 VM 中執行。對比 Type 1：直接跑在硬體上。`, ex:`VirtualBox、VMware Workstation、Parallels（Type 2）；VMware ESXi（Type 1）。`},
+  // ---- Ch2
+  {ch:2, front:`System call`, back:`使用者程式請 OS 在 kernel mode 代為執行特權工作的介面，以 trap 形式進入 kernel，是 OS 服務的程式介面。`, ex:`fork()、open()、read()、write()。`},
+  {ch:2, scn:true, front:`為什麼寫程式通常呼叫 API（如 POSIX）而不是直接呼叫 system call？`, back:`API 提供可攜性（同一程式可在支援相同 API 的系統編譯執行），且比 system call 簡單好用。API 內部才去呼叫實際的 system call，一個 API 不一定對應一個 system call。`, ex:`printf() 是 API，內部呼叫 write() system call。`},
+  {ch:2, front:`Shell / Command interpreter`, back:`命令直譯器：讀取使用者輸入的指令並執行，通常以 fork() + exec() 執行外部程式。`, ex:`macOS Terminal 中的 zsh、Linux 的 bash。`},
+  {ch:2, front:`Mechanism vs Policy`, back:`Mechanism 決定「怎麼做」，Policy 決定「做什麼」。兩者分離後，改政策不用改機制，彈性較高。`, ex:`timer 中斷是機制；每個程式可用 CPU 多久是政策。`},
+  {ch:2, front:`Monolithic structure`, back:`單體式：所有 OS 功能放在同一個 kernel address space，每個程序可呼叫其他任何程序。效能好，但難擴充、一處出錯可能讓整個 kernel 當掉。`, ex:`傳統 UNIX、Linux。`},
+  {ch:2, front:`Microkernel`, back:`微核心：kernel 只留最必要功能（process / memory 管理、IPC），其他服務移到 user space，以 message passing 溝通。容易擴充、安全可靠，但 message passing 造成效能下降。`, ex:`Mach、QNX；Windows NT 早期因效能問題後來把服務搬回 kernel。`},
+  {ch:2, front:`Loadable Kernel Modules（LKM）`, back:`kernel 只有核心元件，其他服務以 module 在開機或執行時動態載入 kernel。有 monolithic 的效能（不需 message passing）和 microkernel 的彈性，但 module 在 kernel mode，有 bug 會危及系統。`, ex:`Linux 用 insmod / rmmod 載入卸載網卡驅動，不用重開機。`},
+  {ch:2, front:`Hybrid system`, back:`混合式：結合多種結構以兼顧效能、安全、可用性。`, ex:`Linux（monolithic＋modular）、Windows（大致 monolithic＋microkernel 特性＋LKM）、macOS（Darwin = Mach＋BSD）。`},
+  {ch:2, front:`Linker vs Loader`, back:`Linker：把多個 object file 與函式庫合併成一個執行檔。Loader：把執行檔載入記憶體以便執行。`, ex:`gcc 把 main.o + libc 連結成 a.out（linker）；輸入 ./a.out 時 loader 把它載入 RAM。`},
+  // ---- Ch3
+  {ch:3, front:`Process vs Program`, back:`Program 是存在磁碟上的被動實體（執行檔）；Process 是執行中的程式，是主動實體，有 program counter 和資源。`, ex:`同一個 Chrome 程式開兩次＝兩個 process，text 相同、data/heap/stack 不同。`},
+  {ch:3, front:`Process memory layout`, back:`由低到高：text（程式碼）、data（global 變數）、heap（動態配置，往上長）、stack（區域變數、參數、return address，往下長）。`, ex:`int value=1; 在 data；malloc() 在 heap；函式裡的 int i; 在 stack。`},
+  {ch:3, front:`PCB（Process Control Block）`, back:`OS 代表一個 process 的資料結構：process state、program counter、CPU registers、排程資訊、記憶體管理資訊、accounting、I/O 狀態。`, ex:`Linux 中的 task_struct。`},
+  {ch:3, scn:true, front:`Process 呼叫 read() 等磁碟資料，資料讀完後它會進入哪個狀態？`, back:`running → waiting（等 I/O）；I/O 完成後 waiting → ready，回到 ready queue 重新排隊等 CPU，不是直接回到 running。`, ex:`就像去櫃檯拿完資料後，要重新排隊才能再被服務。`},
+  {ch:3, front:`Context switch`, back:`內文切換：把舊 process 的狀態（context）存進它的 PCB，再載入新 process 的 PCB。切換期間沒做有用的事，是 pure overhead。`, ex:`time slice 用完，OS 從 Chrome 切到 Spotify。`},
+  {ch:3, front:`fork() 回傳值`, back:`fork() 建立 child（parent 記憶體的複本）。child 拿到 0，parent 拿到 child 的 PID，失敗回傳負值。之後雙方各自擁有獨立的變數。`, ex:`if (pid == 0) 執行 child 的程式碼，else 執行 parent 的程式碼。`},
+  {ch:3, front:`Zombie vs Orphan`, back:`Zombie：child 已結束但 parent 還沒 wait()，PCB 仍留著。Orphan：parent 沒 wait 就先結束，child 還在跑，由 init / systemd 收養。`, ex:`ps 看到標示 defunct 的 process 就是 zombie。`},
+  {ch:3, front:`Shared memory vs Message passing`, back:`Shared memory：共用一塊記憶體，建立後不需 kernel、速度快，但同步由程式設計師負責。Message passing：透過 kernel send/receive，較慢，但無衝突、適合分散式系統與少量資料。`, ex:`POSIX shm_open()（前者）；網路聊天程式（後者）。`},
+  {ch:3, scn:true, front:`Bounded buffer 用 circular array，BUFFER_SIZE = 10，最多能放幾個 item？為什麼？`, back:`9 個（BUFFER_SIZE − 1）。空的條件是 in == out，若放滿 10 個 in 也會等於 out，無法分辨全空或全滿，所以犧牲一格。`, ex:`滿的條件：(in + 1) % BUFFER_SIZE == out。`},
+  {ch:3, front:`Rendezvous`, back:`會合：message passing 中 send() 與 receive() 都是 blocking，雙方都到了才交換資料（zero-capacity buffer）。`, ex:`像當面交貨，兩人都到場才能完成。`},
+  {ch:3, front:`Ordinary pipe vs Named pipe`, back:`Ordinary pipe：單向，需要 parent-child 關係，process 結束就消失。Named pipe（FIFO）：可雙向、不需 parent-child、持續存在檔案系統中。`, ex:`ls | grep txt（ordinary）；mkfifo mypipe（named）。`},
+  // ---- Ch4
+  {ch:4, front:`Thread：共享什麼、私有什麼？`, back:`同一 process 的 thread 共享 code、data（global 變數）、heap、open files；各自私有 thread ID、program counter、registers、stack。`, ex:`兩個 thread 都能改 global 的 value，但各自的 local 變數互不影響。`},
+  {ch:4, front:`Concurrency vs Parallelism`, back:`Concurrency 並行：讓多個工作都有進展，單核心時交錯執行。Parallelism 平行：同一時間真正執行多個工作，需要多核心。有平行必有並行，反之不一定。`, ex:`單核心邊下載邊打字是 concurrency；8 核心同時轉檔是 parallelism。`},
+  {ch:4, front:`Data vs Task parallelism`, back:`Data parallelism：資料切塊分給各核心做相同運算。Task parallelism：不同 thread 做不同運算。`, ex:`兩核心各加總陣列一半（data）；一個 thread 加總、一個求乘積（task）。`},
+  {ch:4, front:`User thread vs Kernel thread`, back:`User thread：由 user-level thread library 管理，kernel 不知道，建立管理快。Kernel thread：OS 直接支援管理，能被排程到 CPU。`, ex:`Java 早期 green threads 是 user thread；Linux 的 pthread 對應 kernel thread。`},
+  {ch:4, scn:true, front:`4 核心電腦上用 many-to-one 模型，其中一個 thread 呼叫 blocking 的 read()，會發生什麼？`, back:`整個 process 被 block（其他 thread 也不能跑），而且 many-to-one 本來就只能用一個核心，無法平行。`, ex:`Solaris Green Threads 的問題，所以現在少用。`},
+  {ch:4, front:`One-to-one model`, back:`每個 user thread 對應一個 kernel thread。優：一個 block 其他仍能跑、可在多處理器平行。缺：建立 user thread 就要建立 kernel thread，數量多會拖累效能。`, ex:`Linux、Windows 都採用。`},
+  {ch:4, front:`Many-to-many / Two-level model`, back:`Many-to-many：多個 user thread 對應較少或等量的 kernel thread，兼顧數量與平行。Two-level：many-to-many 加上可把某 user thread 綁定到一個 kernel thread。`, ex:`舊版 Solaris 支援 two-level。`},
+  {ch:4, front:`Thread pool`, back:`預先建立一批 thread 等工作，用現成 thread 比新建快，且能限制 thread 總數，避免系統資源被耗盡。`, ex:`web server 用固定 50 個 thread 處理請求；Java ExecutorService。`},
+  {ch:4, front:`Asynchronous vs Deferred cancellation`, back:`Asynchronous：立刻終止目標 thread，資源可能沒釋放。Deferred：目標 thread 定期檢查，在安全的 cancellation point 才結束（Pthreads 預設）。`, ex:`寫入資料庫的 thread 適合 deferred，避免寫到一半。`},
+  {ch:4, front:`pthread_create / pthread_join`, back:`pthread_create 建立新 thread 並從指定函式開始執行；pthread_join 等待該 thread 結束（類似 process 的 wait）。`, ex:`主 thread create 一個 runner 計算總和，join 後印出結果。`},
+  // ---- Ch5
+  {ch:5, front:`CPU-bound vs I/O-bound`, back:`CPU-bound：少數長 CPU burst。I/O-bound：很多短 CPU burst。process 執行是 CPU burst 與 I/O burst 交替。`, ex:`影片轉檔（CPU-bound）；文字編輯器（I/O-bound）。`},
+  {ch:5, scn:true, front:`排程只在「running→waiting」和「terminates」時發生，這是哪一種排程？`, back:`Nonpreemptive（cooperative）排程：process 一旦拿到 CPU，就用到自己結束或進入 waiting 才釋放。若 running→ready、waiting→ready 時也會排程就是 preemptive。`, ex:`Windows 3.x 是 nonpreemptive；現代 OS 幾乎都 preemptive。`},
+  {ch:5, front:`Dispatcher / Dispatch latency`, back:`Dispatcher：把 CPU 交給 scheduler 選出的 process：switching context、切到 user mode、跳到程式正確位置。Dispatch latency：停一個 process 並啟動另一個所需時間。`, ex:`Scheduler 決定「選誰」，dispatcher 負責「交棒」。`},
+  {ch:5, front:`Turnaround vs Waiting vs Response time`, back:`Turnaround：提交到完成的總時間。Waiting：在 ready queue 等待的總時間。Response：提交到第一次回應的時間。三者都要最小化。`, ex:`排 6ms 後執行 4ms：waiting 6、turnaround 10。`},
+  {ch:5, front:`CPU utilization / Throughput`, back:`CPU utilization：CPU 忙碌的比例（要最大）。Throughput：單位時間完成的 process 數量（要最大）。`, ex:`伺服器 CPU 使用率 85%；每秒完成 10 筆交易。`}
+];
+
+/* ======================= DATA: QUIZ ======================= */
+const QUIZ = [
+  {ch:1, tag:`情境題`, q:`小明寫了一個 C 程式，執行到 <code>a = 5/0;</code> 時被系統終止。下列哪一項最準確描述這段過程？`,
+   opts:[`程式發出 system call 請 OS 計算除法，OS 拒絕後終止程式`,`CPU 產生 trap（exception），硬體切到 kernel mode，OS 的處理程式終止該程式`,`除法器硬體送出 hardware interrupt，OS 收到後切回 user mode 繼續執行`,`timer interrupt 偵測到程式異常，強迫程式結束`],
+   ans:1,
+   why:[`system call 是程式「刻意」請 OS 服務，除以零是意外錯誤，不是主動請求。`,`除以零屬於軟體錯誤造成的 trap / exception，CPU 切到 kernel mode，查 interrupt vector 後由 exception handler 處理，通常終止程式。`,`除以零是正在執行的指令本身出錯（同步事件），不是外部裝置的非同步硬體中斷；而且處理時是在 kernel mode。`,`timer 處理的是程式執行太久（如無窮迴圈），不會偵測運算錯誤。`]},
+  {ch:1, tag:`情境題`, q:`某程式陷入 <code>while(1){}</code> 無窮迴圈，沒有任何 I/O 也沒有錯誤。為什麼系統上的其他程式還能繼續執行？`,
+   opts:[`dual-mode 讓無窮迴圈只能在 user mode 執行，所以不會影響其他程式`,`無窮迴圈會讓 CPU 產生 exception，OS 因此取回控制權`,`OS 事先設定 timer，時間到產生 interrupt，OS 拿回 CPU 並排程其他程式`,`程式每次迴圈都會隱含呼叫 system call，讓 OS 有機會切換`],
+   ans:2,
+   why:[`光是在 user mode 執行並不能阻止它霸佔 CPU；若沒有 timer，OS 永遠拿不回控制權。`,`空的無窮迴圈完全合法，不會觸發任何 exception（老師投影片特別舉這個例子）。`,`timer 在指定時間後中斷 CPU，OS 一定能拿回控制權；而且設定 timer 是 privileged instruction，程式無法關掉它。`,`<code>while(1){}</code> 裡面沒有任何函式呼叫，不會產生 system call。`]},
+  {ch:1, tag:`情境題`, q:`某銀行有兩台主機：A 執行所有交易服務，B 平常不跑服務、只持續監控 A，A 故障時 B 立即接手。這是哪一種系統設計？`,
+   opts:[`Symmetric clustering`,`Asymmetric multiprocessing`,`Asymmetric clustering`,`NUMA multiprocessor`],
+   ans:2,
+   why:[`symmetric clustering 是兩台都在跑應用、同時互相監控，本題 B 平常不跑服務。`,`multiprocessing 是「一台電腦內」多顆處理器，題目是兩台獨立主機。`,`一台跑應用、另一台處於 hot standby 只監控，正是 asymmetric clustering 的定義，用來提供 high availability。`,`NUMA 描述的是單一機器內 CPU 存取記憶體的速度差異，與備援無關。`]},
+  {ch:1, tag:`情境題`, q:`汽車的安全氣囊控制器必須在碰撞後 15 ms 內引爆，晚了就算正確引爆也沒有意義。這個系統最適合哪一組描述？`,
+   opts:[`Soft real-time 的 time-sharing system`,`Hard real-time 的 embedded system`,`Multiprogramming 的 batch system`,`Soft real-time 的 clustered system`],
+   ans:1,
+   why:[`soft real-time 允許偶爾延遲（例如影音串流），安全氣囊延遲會造成傷害；time-sharing 的目標是互動回應，不保證期限。`,`安全氣囊是專為特定工作設計的硬體＋軟體（embedded），而且「超過期限就等於失敗」是 hard real-time 的定義。`,`batch / multiprogramming 追求 CPU 使用率，不保證回應時間。`,`clustered 是多台電腦組成的高可用系統，與車上控制器無關，且 soft 也不對。`]},
+  {ch:2, tag:`情境題`, q:`公司伺服器需要在<b>不重開機</b>的情況下加入新的網卡驅動程式，而且要求驅動程式的<b>效能接近直接寫在 kernel 中</b>。最適合的 OS 結構是？`,
+   opts:[`Microkernel：把驅動程式放在 user space，透過 message passing 溝通`,`Monolithic：把驅動程式加進 kernel 原始碼後重新編譯`,`Layered：在最上層加入一層驅動程式`,`Loadable kernel modules：把驅動程式編成 module，執行中載入 kernel`],
+   ans:3,
+   why:[`microkernel 可以不重開機新增服務，但驅動程式和其他服務溝通要經過 message passing，效能比不上在 kernel 內直接呼叫。`,`修改 monolithic kernel 需要重新編譯整個 kernel 並重開機，違反第一個條件。`,`layered 每一層只能呼叫下一層，層數多效能差，也不支援執行中加入新層。`,`LKM 可以在執行中用 <code>insmod</code> 載入，module 在 kernel space 直接呼叫其他元件，不需 message passing，兼顧彈性與效能。`]},
+  {ch:2, tag:`情境題`, q:`在一個 microkernel OS 中，負責檔案系統的服務因為 bug 而 crash。最可能的結果是？`,
+   opts:[`整個 kernel panic，系統必須重開機`,`只有檔案系統服務停止，microkernel 和其他服務繼續運作，可重新啟動該服務`,`kernel 會自動把該服務轉成 loadable module 重新載入`,`所有正在使用 message passing 的 process 都會被終止`],
+   ans:1,
+   why:[`這是 monolithic 的情況：所有功能在同一個 kernel address space，一處出錯可能拖垮整個 kernel。`,`microkernel 的檔案系統是以 user process 執行，有自己的 address space，crash 不會破壞 kernel，這就是 microkernel「more security and reliability」的原因。`,`microkernel 與 LKM 是不同設計，kernel 不會自動轉換服務型態。`,`message passing 機制由 microkernel 提供，一個服務掛掉不會讓其他 process 被終止，只有依賴檔案系統的請求會失敗。`]},
+  {ch:2, tag:`流程題`, q:`C 程式執行 <code>printf("hi");</code>，下列哪個順序最正確？`,
+   opts:[`printf 切到 kernel mode → 呼叫 C library → write() → 回到 user mode`,`printf（C library）→ write() system call → trap 切到 kernel mode → 執行 kernel 中的 write → 切回 user mode`,`printf 直接呼叫螢幕的 device driver（user mode）→ 完成後 trap 通知 OS`,`write() system call → printf（C library）→ trap → 回到 user mode`],
+   ans:1,
+   why:[`printf 本身是 C library 的 API，執行時仍在 user mode，要到 system call 的 trap 才會切到 kernel mode。`,`API（printf）在 user mode 呼叫 system call（write），trap 讓 CPU 進入 kernel mode，system call interface 查表執行 kernel 服務，完成後回到 user mode。`,`user mode 的程式不能直接操作 device driver（那需要 privileged instruction）。`,`順序顛倒：程式呼叫的是 API，API 內部才呼叫 system call。`]},
+  {ch:2, tag:`觀念應用`, q:`下列哪一項屬於 <b>policy</b>（政策），而不是 mechanism（機制）？`,
+   opts:[`硬體 timer 能在倒數歸零時中斷 CPU`,`CPU 提供 mode bit 區分 kernel mode 與 user mode`,`I/O-bound 的程式應該比 CPU-bound 的程式有更高的優先權`,`OS 提供 context switch 的程式碼來保存與載入 PCB`],
+   ans:2,
+   why:[`timer 中斷能力是「怎麼做」的工具，屬於 mechanism；「設定多久」才是 policy。`,`mode bit 是硬體提供的保護機制，屬於 mechanism。`,`決定「誰該優先」是在做選擇（做什麼），屬於 policy；同樣的排程機制可以換成不同政策。`,`context switch 是「如何切換」的實作，屬於 mechanism。`]},
+  {ch:3, tag:`情境題`, q:`一個 process 正在執行，呼叫 <code>read()</code> 從磁碟讀檔。磁碟讀取完成的那一刻，這個 process 的狀態轉換是？`,
+   opts:[`waiting → running`,`running → ready`,`waiting → ready`,`ready → running`],
+   ans:2,
+   why:[`I/O 完成後不能直接回到 running，因為 CPU 可能正被其他 process 使用，必須先回 ready queue 排隊。`,`running → ready 是被 interrupt（例如 time slice 用完）打斷的情況；這個 process 在讀磁碟期間根本不在 running。`,`發出 read() 時是 running → waiting；I/O completion 時是 waiting → ready，之後再由 scheduler dispatch。`,`ready → running 是 scheduler dispatch，發生在之後，不是 I/O 完成的那一刻。`]},
+  {ch:3, tag:`觀念應用`, q:`Context switch 時 OS 需要保存舊 process 的 context 到 PCB。下列哪一項<b>不需要</b>存進 PCB？`,
+   opts:[`Program counter 的值`,`CPU registers 的值`,`Process 的 heap 中所有資料的內容`,`Memory-management information（如 page table、base/limit register）`],
+   ans:2,
+   why:[`PC 記錄下一個要執行的指令，不存就無法從中斷處繼續。`,`registers 會被下一個 process 覆蓋，一定要存。`,`heap 的資料本來就在該 process 的記憶體中，切換時不會被覆蓋，不需要複製到 PCB；PCB 只要記錄記憶體管理資訊（在哪裡）。`,`切換 address space 需要這些資訊，屬於 context 的一部分。`]},
+  {ch:3, tag:`程式追蹤`, q:`以下程式 parent 最後印出的值是？<div class="code" style="margin:8px 0 0">int x = 5;
+int main(){
+  pid_t pid = fork();
+  if (pid == 0) { x += 10; return 0; }
+  wait(NULL);
+  printf("%d", x);
+}</div>`,
+   opts:[`15`,`5`,`10`,`結果不確定，要看 child 和 parent 誰先執行`],
+   ans:1,
+   why:[`child 改的是自己那份 x 的複本，不會影響 parent。若把 fork 換成 pthread_create 才會是 15。`,`fork() 後 parent 與 child 有各自獨立的 address space，child 把自己的 x 改成 15，parent 的 x 仍是 5。`,`沒有任何地方會產生 10。`,`parent 有 wait(NULL)，而且兩者變數獨立，所以結果確定是 5。`]},
+  {ch:3, tag:`情境題`, q:`用 shared memory 實作 bounded buffer（circular array），<code>BUFFER_SIZE = 8</code>，使用 <code>in == out</code> 判斷空、<code>(in+1) % BUFFER_SIZE == out</code> 判斷滿。buffer 最多能同時存放幾個 item？`,
+   opts:[`8 個，因為陣列大小是 8`,`7 個，因為要用一格分辨全空與全滿`,`4 個，因為 producer 和 consumer 各用一半`,`沒有上限，因為 in 和 out 會循環`],
+   ans:1,
+   why:[`若能放滿 8 個，in 會繞回等於 out，與「空」的條件相同，無法分辨，所以不可能放滿。`,`犧牲一格，最多 BUFFER_SIZE − 1 = 7 個。`,`buffer 不是平分給兩邊，producer 放、consumer 拿，用的是同一個陣列。`,`circular array 只是重複使用空間，容量仍受陣列大小限制（bounded buffer）。`]},
+  {ch:3, tag:`情境題`, q:`你要開發一個讓台北和高雄兩台電腦上的程式互相傳訊息的聊天系統。最適合的 IPC 方式是？`,
+   opts:[`Shared memory，因為速度最快`,`Ordinary pipe，因為 pipe 實作最簡單`,`Message passing（例如 socket），因為不需要共用 address space`,`Named pipe，因為不需要 parent-child 關係`],
+   ans:2,
+   why:[`兩台不同電腦沒有可以共用的實體記憶體，shared memory 在分散式環境很難實作。`,`ordinary pipe 需要 parent-child 關係，而且只能在同一台機器上。`,`message passing 不需要共用記憶體，特別適合不同電腦間通訊（投影片例子正是 Internet chat program），socket 就是實例。`,`named pipe 雖不需 parent-child，但（UNIX 中）仍限於同一台機器。`]},
+  {ch:4, tag:`情境題`, q:`一台<b>單核心</b>電腦上的 web server 改成多執行緒（每個 request 一個 thread）後，回應變快了。最合理的原因是？`,
+   opts:[`多個 thread 在單核心上可以真正平行執行`,`某個 thread 等待磁碟或網路 I/O 時，其他 thread 可以使用 CPU 處理別的 request`,`thread 不需要 context switch，所以沒有 overhead`,`每個 thread 有自己獨立的 address space，不會互相干擾`],
+   ans:1,
+   why:[`單核心同一時間只能執行一個 thread，只有 concurrency（交錯執行），沒有 parallelism。`,`web server 是 I/O 密集，多執行緒讓 CPU 在某 thread 等 I/O 時去服務別人，提升 responsiveness 與 throughput。`,`thread 之間仍要 context switch，只是比 process 便宜。`,`同一 process 的 thread 共享 address space（code、data、heap），各自只有 stack 和 registers。`]},
+  {ch:4, tag:`情境題`, q:`某系統使用 <b>many-to-one</b> 模型，在 4 核心電腦上執行有 4 個 thread 的程式。其中一個 thread 呼叫了 blocking 的 <code>read()</code>。會發生什麼？`,
+   opts:[`只有該 thread 被 block，其他 3 個 thread 繼續在其他核心上執行`,`整個 process 被 block；而且即使沒有 block，這 4 個 thread 也無法同時在多核心上執行`,`kernel 會自動為其他 3 個 thread 建立新的 kernel thread`,`該 thread 被 block，其他 thread 可以繼續但只能輪流使用一個核心`],
+   ans:1,
+   why:[`這是 one-to-one 的行為。many-to-one 只有一個 kernel thread，kernel 看不到個別 user thread。`,`所有 user thread 對應同一個 kernel thread，它被 block 整個 process 就停住（2017 填空題）；而且一次只有一個 thread 能進 kernel，無法平行。`,`many-to-one 中 kernel 根本不知道有多個 user thread，不會自動建立。`,`唯一的 kernel thread 被 block 了，其他 user thread 也無法執行。`]},
+  {ch:4, tag:`程式追蹤`, q:`下列程式的輸出為何？<div class="code" style="margin:8px 0 0">int value = 0;
+void *runner(void *p){ value = 5; pthread_exit(0); }
+int main(){
+  pthread_create(&amp;tid, &amp;attr, runner, NULL);
+  pthread_join(tid, NULL);
+  printf("A=%d ", value);
+  if (fork() == 0) { value = 9; return 0; }
+  wait(NULL);
+  printf("B=%d", value);
+}</div>`,
+   opts:[`A=0 B=0`,`A=5 B=9`,`A=5 B=5`,`A=0 B=9`],
+   ans:2,
+   why:[`thread 和 main 共享 global 變數，join 之後 value 已經是 5。`,`child 把自己那份 value 改成 9，parent 不受影響。`,`thread 共享 data section，所以 A=5；fork 的 child 改的是複本，parent 印 B 時仍是 5。`,`A 錯（thread 共享變數）且 B 錯（fork 不共享）。`]},
+  {ch:4, tag:`情境題`, q:`一個 thread 正在把一筆交易寫入資料庫，使用者按下取消。為了避免資料寫到一半，應該使用哪種 thread cancellation？`,
+   opts:[`Asynchronous cancellation：立刻終止目標 thread`,`Deferred cancellation：目標 thread 在安全的 cancellation point 檢查後自行結束`,`直接呼叫 exit() 結束整個 process`,`用 signal 讓所有 thread 同時停止`],
+   ans:1,
+   why:[`立即終止可能讓資料寫到一半、資源（鎖、檔案）沒釋放，造成不一致。`,`deferred 讓目標 thread 在安全時機（cancellation point）檢查並有序結束，也是 Pthreads 的預設。`,`exit() 會結束整個 process，所有 thread 都被終止，同樣可能寫到一半。`,`signal 送給所有 thread 不是取消單一 thread 的正確方法，也無法保證寫入完成。`]},
+  {ch:5, tag:`情境題`, q:`P1 正在執行時，較高優先權的 P2 完成 I/O 回到 ready queue，OS 立刻把 CPU 從 P1 收回交給 P2。這個排程器屬於？`,
+   opts:[`Nonpreemptive，因為 P2 是因 I/O 完成才被排程`,`Cooperative，因為 P1 自願讓出 CPU`,`Preemptive，因為在 waiting → ready 時發生排程並搶走 CPU`,`無法判斷，要看 P1 是否為 CPU-bound`],
+   ans:2,
+   why:[`nonpreemptive 只在 running→waiting 或 terminates 時排程，P1 並沒有結束或進入 waiting。`,`cooperative 就是 nonpreemptive，P1 是被強迫讓出，不是自願。`,`排程發生在情況 3（waiting → ready），並且搶走正在執行的 P1 的 CPU，這是 preemptive。`,`是不是 preemptive 由「何時可以排程」決定，與 P1 的 burst 型態無關。`]},
+  {ch:5, tag:`觀念應用`, q:`設計一個<b>互動式</b>系統（例如手機 app 的 UI）時，最優先要最小化的排程指標是？`,
+   opts:[`Throughput`,`Turnaround time`,`Response time`,`CPU utilization`],
+   ans:2,
+   why:[`throughput 是要「最大化」的指標，而且使用者在意的是反應快不快，不是每秒完成幾個工作。`,`turnaround time 看的是提交到「完成」，適合批次工作；互動系統在意的是多快開始回應。`,`response time 是從送出 request 到產生「第一個回應」的時間，最直接影響使用者感受。`,`CPU utilization 也是要「最大化」，CPU 很忙不代表使用者感覺快。`]},
+  {ch:5, tag:`觀念應用`, q:`下列哪一項<b>不是</b> dispatcher 的工作？`,
+   opts:[`從 ready queue 中決定下一個要執行的 process`,`Switching context`,`Switching to user mode`,`跳到 user program 中正確的位置重新開始執行`],
+   ans:0,
+   why:[`「選誰」是 CPU scheduler 的工作；dispatcher 負責把 CPU 交給 scheduler 選好的 process。`,`switching context 是 dispatcher 的工作之一。`,`切回 user mode 是 dispatcher 的工作之一。`,`跳到程式正確位置是 dispatcher 的第三個工作。`]}
+];
+
+// 打散正確答案的位置（選項與解析一起重排）
+const PERM = {2:[2,0,1,3], 5:[0,2,3,1], 8:[2,0,1,3], 11:[0,2,3,1], 13:[1,0,2,3], 16:[0,2,3,1]};
+for (const k in PERM){
+  const q = QUIZ[k], p = PERM[k];
+  q.opts = p.map(i => q.opts[i]); q.why = p.map(i => q.why[i]); q.ans = p.indexOf(q.ans);
+}
+
+/* ======================= UTIL ======================= */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+const CH_NAME = {1:'Ch1 Introduction',2:'Ch2 OS Structures',3:'Ch3 Processes',4:'Ch4 Threads',5:'Ch5.1–5.2 CPU Scheduling'};
+
+/* ======================= TABS & NAV ======================= */
+let activeTab = 'notes';
+function switchTab(name, keepScroll){
+  activeTab = name;
+  $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  buildNav();
+  if (!keepScroll) window.scrollTo({top:0, behavior:'instant'});
+  store.set('os_tab', name);
+  spy();
+}
+function buildNav(){
+  const panel = $('#tab-' + activeTab);
+  const titles = {notes:'筆記目錄', cards:'Flashcard 分組', quiz:'題目列表', exam:'考古題'};
+  $('#navTitle').textContent = titles[activeTab];
+  $('#nav').innerHTML = $$('[data-nav]', panel).filter(h => h.offsetParent !== null || h.closest('.panel.active'))
+    .map(h => `<a href="#${h.id}" data-id="${h.id}" class="${h.tagName === 'H2' ? 'l2' : 'l3'}">${h.dataset.nav}</a>`).join('');
+}
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) switchTab(b.dataset.tab); });
+$('#nav').addEventListener('click', e => {
+  const a = e.target.closest('a'); if (!a) return;
+  e.preventDefault();
+  const el = document.getElementById(a.dataset.id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.body.classList.remove('nav-open');
+});
+$('#menuBtn').addEventListener('click', () => document.body.classList.toggle('nav-open'));
+$('#overlay').addEventListener('click', () => document.body.classList.remove('nav-open'));
+
+let ticking = false;
+function spy(){
+  const links = $$('#nav a'); if (!links.length) return;
+  let cur = links[0].dataset.id;
+  for (const a of links){
+    const el = document.getElementById(a.dataset.id);
+    if (el && el.getBoundingClientRect().top < 140) cur = a.dataset.id;
+  }
+  if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) cur = links[links.length-1].dataset.id;
+  links.forEach(a => {
+    const on = a.dataset.id === cur;
+    if (on && !a.classList.contains('active')){
+      const sb = $('#sidebar'), r = a.getBoundingClientRect(), sr = sb.getBoundingClientRect();
+      if (r.top < sr.top + 40 || r.bottom > sr.bottom - 40) sb.scrollTop += r.top - sr.top - sr.height/3;
+    }
+    a.classList.toggle('active', on);
+  });
+}
+window.addEventListener('scroll', () => { if (!ticking){ ticking = true; requestAnimationFrame(() => { spy(); ticking = false; }); } }, {passive:true});
+
+/* goto links from exam tab -> notes */
+document.addEventListener('click', e => {
+  const g = e.target.closest('.goto'); if (!g) return;
+  e.preventDefault();
+  switchTab('notes', true);
+  const el = document.getElementById(g.dataset.goto);
+  if (el) requestAnimationFrame(() => el.scrollIntoView({behavior:'smooth', block:'start'}));
+});
+/* reveal blanks */
+document.addEventListener('click', e => { const a = e.target.closest('.blank .a'); if (a) a.classList.toggle('show'); });
+
+/* ======================= FLASHCARDS ======================= */
+let fcFilter = 'all', fcOrder = CARDS.map((_, i) => i);
+const flipped = new Set();
+function renderCards(){
+  const groups = {};
+  fcOrder.forEach(i => { const c = CARDS[i]; if (fcFilter !== 'all' && String(c.ch) !== fcFilter) return; (groups[c.ch] = groups[c.ch] || []).push(i); });
+  $('#fcWrap').innerHTML = Object.keys(groups).sort().map(ch => `
+    <h3 class="fc-group" id="fc-ch${ch}" data-nav="${CH_NAME[ch]}（${groups[ch].length}）">${CH_NAME[ch]} <span class="small">· ${groups[ch].length} 張</span></h3>
+    <div class="fc-grid">${groups[ch].map(i => {
+      const c = CARDS[i];
+      return `<div class="fc${flipped.has(i) ? ' flipped' : ''}" data-i="${i}" tabindex="0" role="button" aria-label="翻牌">
+        <div class="fc-inner">
+          <div class="face front">
+            <div class="k">${c.scn ? 'SCENARIO · 情境' : 'TERM · 術語'} · CH${c.ch}</div>
+            <div class="${c.scn ? 'scn' : 'term'}">${c.front}</div>
+            <div class="hint">點擊翻牌 ↻</div>
+          </div>
+          <div class="face back">
+            <div class="bt">${c.scn ? '解答' : c.front}</div>
+            <div>${c.back}</div>
+            <div class="bx">💡 ${c.ex}</div>
+          </div>
+        </div></div>`;
+    }).join('')}</div>`).join('');
+  updateFcCount();
+  if (activeTab === 'cards') buildNav();
+}
+function updateFcCount(){
+  const vis = $$('.fc', $('#fcWrap')).length;
+  const fl = $$('.fc.flipped', $('#fcWrap')).length;
+  $('#fcCount').textContent = `已翻 ${fl} / ${vis} 張`;
+}
+$('#fcWrap').addEventListener('click', e => {
+  const c = e.target.closest('.fc'); if (!c) return;
+  const i = +c.dataset.i;
+  c.classList.toggle('flipped');
+  c.classList.contains('flipped') ? flipped.add(i) : flipped.delete(i);
+  updateFcCount();
+});
+$('#fcWrap').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('fc')){ e.preventDefault(); e.target.click(); } });
+$('#fcToolbar').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]'); if (!b) return;
+  fcFilter = b.dataset.f;
+  $$('[data-f]').forEach(x => x.classList.toggle('on', x === b));
+  renderCards();
+});
+$('#fcReset').addEventListener('click', () => { flipped.clear(); $$('.fc.flipped').forEach(c => c.classList.remove('flipped')); updateFcCount(); });
+$('#fcShuffle').addEventListener('click', () => {
+  for (let i = fcOrder.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  renderCards();
+});
+
+/* ======================= QUIZ ======================= */
+const answered = {};
+function renderQuiz(){
+  const L = 'ABCD';
+  $('#quizWrap').innerHTML = QUIZ.map((q, qi) => `
+    <div class="q" id="q${qi+1}" data-nav="Q${qi+1} · Ch${q.ch} ${q.tag}" data-q="${qi}">
+      <div class="qh"><span class="qn">Q${qi+1}</span><span class="qt">Ch${q.ch}</span><span class="qt">${q.tag}</span></div>
+      <div class="stem">${q.q}</div>
+      ${q.opts.map((o, oi) => `<button class="opt" data-o="${oi}"><span class="ol">${L[oi]}.</span><span>${o}</span></button>`).join('')}
+      <div class="expl">
+        <div class="verdict"></div>
+        <ul>${q.why.map((w, oi) => `<li class="${oi === q.ans ? 'r' : 'w'}"><b>${L[oi]} ${oi === q.ans ? '✔ 正確' : '✘ 錯誤'}：</b>${w}</li>`).join('')}</ul>
+      </div>
+    </div>`).join('');
+  $('#qTotal').textContent = QUIZ.length;
+  updateScore();
+}
+function updateScore(){
+  const done = Object.keys(answered).length;
+  const right = Object.values(answered).filter(Boolean).length;
+  $('#qDone').textContent = done; $('#qRight').textContent = right;
+  $('#qProg').style.width = (done / QUIZ.length * 100) + '%';
+}
+$('#quizWrap').addEventListener('click', e => {
+  const b = e.target.closest('.opt'); if (!b) return;
+  const box = b.closest('.q'), qi = +box.dataset.q;
+  if (qi in answered) return;               // 選過不可重選
+  const q = QUIZ[qi], oi = +b.dataset.o, ok = oi === q.ans;
+  answered[qi] = ok;
+  $$('.opt', box).forEach((x, k) => {
+    x.disabled = true;
+    if (k === q.ans) x.classList.add('right');
+    else if (k === oi) x.classList.add('wrong');
+    else x.classList.add('dim');
+  });
+  const ex = $('.expl', box);
+  $('.verdict', ex).innerHTML = ok ? '<span class="good">✔ 答對了！</span>' : `<span class="badc">✘ 答錯了，正確答案是 ${'ABCD'[q.ans]}</span>`;
+  ex.classList.add('show');
+  updateScore();
+});
+$('#qReset').addEventListener('click', () => { for (const k in answered) delete answered[k]; renderQuiz(); if (activeTab === 'quiz') buildNav(); window.scrollTo({top:0, behavior:'smooth'}); });
+
+/* ======================= INIT ======================= */
+renderCards();
+renderQuiz();
+const saved = store.get('os_tab');
+switchTab(saved && $('#tab-' + saved) ? saved : 'notes');
+</script>
+</body>
+</html>
